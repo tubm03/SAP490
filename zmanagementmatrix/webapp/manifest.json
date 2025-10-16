@@ -178,39 +178,28 @@
                     },
                     "sections": {
                       "Steps": {
-                        "createMode": "creationRowsHiddenInEditMode",
+                        "createMode": "inline",
                         "tableSettings": {
-                          "type": "ResponsiveTable"
+                          "type": "ResponsiveTable",
+                          "createWithParameterDialog": {
+                            "fields": {
+                              "SequenceNumber": {
+                                "path": "SequenceNumber",
+                                "label": "Log Sequence Number"
+                              },
+                              "ApproveLevel": {
+                                "path": "ApproveLevel",
+                                "label": "Approval Level"
+                              }
+                            }
+                          }
                         },
                         "disableDefaultInlineCreateSort": false
                       }
                     }
                   }
                 },
-                "pages": {
-                  "ObjectPage|to_Step": {
-                    "navigationProperty": "to_Step",
-                    "entitySet": "Z4C_APPROVE_STEP",
-                    "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
-                    "component": {
-                      "name": "sap.suite.ui.generic.template.ObjectPage",
-                      "settings": {
-                        "showConfirmationOnDraftActivate": true,
-                        "tableSettings": {
-                          "multiSelect": true
-                        },
-                        "sections": {
-                          "Steps": {
-                            "createMode": "creationRows",
-                            "tableSettings": {
-                              "type": "ResponsiveTable"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+                "pages": {}
               }
             }
           }
