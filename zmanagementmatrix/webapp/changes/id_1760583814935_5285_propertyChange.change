@@ -1,0 +1,41 @@
+{
+    "fileName": "id_1760583814935_5285_propertyChange",
+    "fileType": "change",
+    "changeType": "propertyChange",
+    "moduleName": "",
+    "reference": "zmanagementmatrix",
+    "packageName": "",
+    "content": {
+        "property": "alwaysShowContentHeader",
+        "newValue": true
+    },
+    "selector": {
+        "id": "zmanagementmatrix::sap.suite.ui.generic.template.ObjectPage.view.Details::Z4C_ROOT_APPROVE_MATRIX--objectPage",
+        "idIsLocal": false,
+        "type": "sap.uxap.ObjectPageLayout"
+    },
+    "layer": "CUSTOMER_BASE",
+    "texts": {},
+    "namespace": "apps/zmanagementmatrix/changes/",
+    "projectId": "",
+    "creation": 1760583826229,
+    "originalLanguage": "",
+    "support": {
+        "generator": "changeUtils: SAPFioriTools",
+        "service": "",
+        "user": "",
+        "sapui5Version": "1.108.33",
+        "sourceChangeFileName": "",
+        "compositeCommand": ""
+    },
+    "oDataInformation": {},
+    "dependentSelector": {},
+    "validAppVersions": {
+        "from": "0.0.1",
+        "to": "0.0.1",
+        "creation": "0.0.1"
+    },
+    "jsOnly": false,
+    "variantReference": "",
+    "appDescriptorChange": false
+}

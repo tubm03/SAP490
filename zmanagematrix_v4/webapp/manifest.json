@@ -1,0 +1,207 @@
+{
+  "_version": "1.48.0",
+  "sap.app": {
+    "id": "zmanagematrixv4",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:fpm",
+      "version": "1.19.1",
+      "toolsId": "c8c42c2a-de1c-4e1c-ac6d-81edbd6f4bfb"
+    },
+    "dataSources": {
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation.xml",
+        "settings": {
+          "localUri": "annotations/annotation.xml"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata4/sap/z4ui_root_approve_matrix_v4/srvd/sap/z4c_root_approve_matrix_sd/0001/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "annotation"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.108.33",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "zmanagematrixv4.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        {
+          "name": "Z4C_ROOT_APPROVE_MATRIXList",
+          "pattern": ":?query:",
+          "target": "Z4C_ROOT_APPROVE_MATRIXList"
+        },
+        {
+          "name": "Z4C_ROOT_APPROVE_MATRIXObjectPage",
+          "pattern": "Z4C_ROOT_APPROVE_MATRIX({Z4C_ROOT_APPROVE_MATRIXKey}):?query:",
+          "target": "Z4C_ROOT_APPROVE_MATRIXObjectPage"
+        },
+        {
+          "name": "Z4C_ROOT_APPROVE_MATRIX__CondObjectPage",
+          "pattern": "Z4C_ROOT_APPROVE_MATRIX({Z4C_ROOT_APPROVE_MATRIXKey})/_Cond({_CondKey}):?query:",
+          "target": "Z4C_ROOT_APPROVE_MATRIX__CondObjectPage"
+        },
+        {
+          "name": "Z4C_ROOT_APPROVE_MATRIX__Cond__StepObjectPage",
+          "pattern": "Z4C_ROOT_APPROVE_MATRIX({Z4C_ROOT_APPROVE_MATRIXKey})/_Cond({_CondKey})/_Step({_StepKey}):?query:",
+          "target": "Z4C_ROOT_APPROVE_MATRIX__Cond__StepObjectPage"
+        }
+      ],
+      "targets": {
+        "Z4C_ROOT_APPROVE_MATRIXList": {
+          "type": "Component",
+          "id": "Z4C_ROOT_APPROVE_MATRIXList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "navigation": {
+                "Z4C_ROOT_APPROVE_MATRIX": {
+                  "detail": {
+                    "route": "Z4C_ROOT_APPROVE_MATRIXObjectPage"
+                  }
+                }
+              },
+              "contextPath": "/Z4C_ROOT_APPROVE_MATRIX",
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "selectAll": true,
+                    "selectionLimit": 50,
+                    "type": "GridTable",
+                    "personalization": {
+                      "filter": false,
+                      "sort": true
+                    },
+                    "quickVariantSelection": {
+                      "showCounts": true
+                    }
+                  },
+                  "actions": {
+                    "DataFieldForAction::com.sap.gateway.srvd.z4c_root_approve_matrix_sd.v0001.copyMatrix::com.sap.gateway.srvd.z4c_root_approve_matrix_sd.v0001.Z4C_ROOT_APPROVE_MATRIXType": {
+                      "enableOnSelect": "single"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Z4C_ROOT_APPROVE_MATRIXObjectPage": {
+          "type": "Component",
+          "id": "Z4C_ROOT_APPROVE_MATRIXObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {
+                "_Cond": {
+                  "detail": {
+                    "route": "Z4C_ROOT_APPROVE_MATRIX__CondObjectPage"
+                  }
+                }
+              },
+              "contextPath": "/Z4C_ROOT_APPROVE_MATRIX"
+            }
+          }
+        },
+        "Z4C_ROOT_APPROVE_MATRIX__CondObjectPage": {
+          "type": "Component",
+          "id": "Z4C_ROOT_APPROVE_MATRIX__CondObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {
+                "_Step": {
+                  "detail": {
+                    "route": "Z4C_ROOT_APPROVE_MATRIX__Cond__StepObjectPage"
+                  }
+                }
+              },
+              "contextPath": "/Z4C_ROOT_APPROVE_MATRIX/_Cond"
+            }
+          }
+        },
+        "Z4C_ROOT_APPROVE_MATRIX__Cond__StepObjectPage": {
+          "type": "Component",
+          "id": "Z4C_ROOT_APPROVE_MATRIX__Cond__StepObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/Z4C_ROOT_APPROVE_MATRIX/_Cond/_Step"
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {}
+}
