@@ -91,7 +91,7 @@
         "settings": {
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
+          "refreshAfterChange": true,
           "metadataUrlParams": {
             "sap-value-list": "none"
           }
@@ -114,7 +114,7 @@
   "sap.ui.generic.app": {
     "_version": "1.3.0",
     "settings": {
-      "forceGlobalRefresh": false,
+      "forceGlobalRefresh": true,
       "objectPageHeaderType": "Dynamic",
       "considerAnalyticalParameters": true,
       "showDraftToggle": false
@@ -152,7 +152,25 @@
                 "entitySet": "Z4C_APPROVE_CONDITION",
                 "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
                 "component": {
-                  "name": "sap.suite.ui.generic.template.ObjectPage"
+                  "name": "sap.suite.ui.generic.template.ObjectPage",
+                  "settings": {
+                    "sections": {
+                      "Steps": {
+                        "tableSettings": {
+                          "createWithParameterDialog": {
+                            "fields": {
+                              "SequenceNumber": {
+                                "path": "SequenceNumber"
+                              },
+                              "ApproveLevel": {
+                                "path": "ApproveLevel"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
