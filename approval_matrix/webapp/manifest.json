@@ -61,6 +61,7 @@
     }
   },
   "sap.ui5": {
+    "rootView": {},
     "flexEnabled": true,
     "dependencies": {
       "minUI5Version": "1.141.1",
