@@ -1,0 +1,29 @@
+{
+  "generationParameters": {
+    "generationDate": "Sat Oct 18 2025 21:23:13 GMT+0700 (Indochina Time)",
+    "generatorPlatform": "Visual Studio Code",
+    "serviceType": "SAP System (ABAP On-Premise)",
+    "metadataFilename": "",
+    "serviceUrl": "https://s35.gb.ucc.cit.tum.de/sap/opu/odata/sap/Z_UI_MANAGE_REQ_HRBP_O2",
+    "appName": "project1",
+    "appTitle": "Manage Recruitment Requisitions",
+    "appDescription": "Manage Recruitment Requisitions",
+    "appNamespace": "",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.108.33",
+    "enableCodeAssist": false,
+    "enableEslint": false,
+    "enableTypeScript": false,
+    "showMockDataInfo": true,
+    "generatorVersion": "1.19.1",
+    "template": "List Report Page V2",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Requisition"
+      }
+    ],
+    "launchText": "To launch the generated application, run the following from the generated application root folder:\n\n```\n    npm start\n```"
+  }
+}

@@ -1,0 +1,142 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    
+    <Dialog
+        id="sendMailDialog"
+        title="Send Mail"
+        contentWidth="700px"
+        contentHeight="600px"
+        resizable="true"
+        draggable="true">
+        
+        <customHeader>
+            <Bar id="dialogHeaderBar">
+                <contentLeft>
+                    <Title id="dialogTitle" text="Offer Result Notification"/>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+        
+        <content>
+            <IconTabBar
+                id="idIconTabBar"
+                class="sapUiResponsiveContentPadding">
+                
+                <items>
+                    <!-- Tab 1: General Information -->
+                    <IconTabFilter id="generalTab" text="General Information" key="general">
+                        <content>
+                            <VBox id="generalVBox" class="sapUiSmallMargin">
+                                <HBox id="namePositionHBox">
+                                    <VBox id="nameVBox" width="50%" class="sapUiTinyMarginEnd">
+                                        <Label id="generalInfoLabel" text="General Information" design="Bold"/>
+                                        <VBox id="fullNameVBox" class="sapUiTinyMarginTop">
+                                            <Label id="fullNameLabel" text="Full Name Applicant"/>
+                                            <Input 
+                                                id="fullNameInput"
+                                                value="{dialog>/FullName}" 
+                                                editable="false"
+                                                width="100%"/>
+                                        </VBox>
+                                    </VBox>
+                                    
+                                    <VBox id="positionVBox" width="50%">
+                                        <Label id="positionLabel" text="Position"/>
+                                        <Input 
+                                            id="positionInput"
+                                            value="{dialog>/Position}" 
+                                            editable="false"
+                                            width="100%"/>
+                                    </VBox>
+                                </HBox>
+                                
+                                <VBox id="emailVBox" class="sapUiSmallMarginTop">
+                                    <Label id="emailLabel" text="Email (To)" required="true"/>
+                                    <Input 
+                                        id="emailInput"
+                                        value="{dialog>/Email}" 
+                                        placeholder="Enter email address"
+                                        width="100%"
+                                        type="Email"/>
+                                </VBox>
+                                
+                                <VBox id="subjectVBox" class="sapUiSmallMarginTop">
+                                    <Label id="subjectLabel" text="Subject"/>
+                                    <Input 
+                                        id="subjectInput"
+                                        value="Job Offer Notification – E-Tech Company." 
+                                        editable="false"
+                                        width="100%"/>
+                                </VBox>
+                                
+                                <VBox id="emailPreviewVBox" class="sapUiSmallMarginTop">
+                                    <Label id="emailContentLabel" text="Email Content" design="Bold"/>
+                                    <TextArea
+                                        id="emailContentPreview"
+                                        value="{dialog>/EmailContent}"
+                                        rows="8"
+                                        width="100%"
+                                        class="sapUiTinyMarginTop"/>
+                                </VBox>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+                    
+                    <!-- Tab 2: Email Content -->
+                    <IconTabFilter id="contentTab" text="Email Content" key="content">
+                        <content>
+                            <VBox id="contentVBox" class="sapUiSmallMargin">
+                                <Label id="contentLabel" text="Email Content" design="Bold"/>
+                                <TextArea
+                                    id="emailContentArea"
+                                    value="{dialog>/EmailContent}"
+                                    rows="22"
+                                    width="100%"
+                                    class="sapUiTinyMarginTop"/>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+                    
+                    <!-- Tab 3: File Attachment -->
+                    <IconTabFilter id="attachmentTab" text="File Attachment" key="attachment">
+                        <content>
+                            <VBox id="attachmentVBox" class="sapUiSmallMargin">
+                                <Label id="attachmentTitleLabel" text="File Attachment" design="Bold"/>
+                                <VBox id="attachmentContentVBox" class="sapUiTinyMarginTop">
+                                    <Label id="attachmentsLabel" text="Attachments:"/>
+                                    <HBox id="fileHBox" alignItems="Center" class="sapUiTinyMarginTop">
+                                        <Input 
+                                            id="attachmentInput"
+                                            value="[Offer_Letter.pdf]" 
+                                            editable="false"
+                                            width="400px"/>
+                                        <Button 
+                                            id="chooseFileBtn"
+                                            text="Choose File" 
+                                            class="sapUiTinyMarginBegin"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </content>
+                    </IconTabFilter>
+                    
+                </items>
+            </IconTabBar>
+        </content>
+        
+        <buttons>
+            <Button
+                id="cancelBtn"
+                text="Cancel"
+                press=".onCancelSendMail"/>
+            <Button
+                id="sendBtn"
+                text="Send"
+                type="Emphasized"
+                press=".onSendEmailConfirm"/>
+        </buttons>
+        
+    </Dialog>
+</core:FragmentDefinition>
