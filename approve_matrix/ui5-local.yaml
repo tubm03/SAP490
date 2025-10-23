@@ -2,7 +2,7 @@
 
 specVersion: "3.1"
 metadata:
-  name: approvalmatrix
+  name: approvematrix
 type: application
 framework:
   name: SAPUI5

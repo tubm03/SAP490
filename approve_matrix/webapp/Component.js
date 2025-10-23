@@ -3,7 +3,7 @@ sap.ui.define(
     function (Component) {
         "use strict";
 
-        return Component.extend("approvalmatrix.Component", {
+        return Component.extend("approvematrix.Component", {
             metadata: {
                 manifest: "json"
             }

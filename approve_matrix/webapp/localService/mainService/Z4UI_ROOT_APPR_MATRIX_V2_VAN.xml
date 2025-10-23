@@ -35,12 +35,13 @@
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_CONDITIONType/to_Step_oc">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_CONDITIONType/ConditionType">
-                <Annotation Term="Common.Text" Path="ConditionText">
-                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
-                </Annotation>
-            </Annotations>
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_CONDITIONType">
+                <Annotation Term="UI.DataPoint" Qualifier="Status">
+                    <Record>
+                        <PropertyValue Property="Value" Path="MatrixStatus"/>
+                        <PropertyValue Property="Title" String="Matrix Status"/>
+                    </Record>
+                </Annotation>
                 <Annotation Term="UI.DataPoint" Qualifier="OrgLevel">
                     <Record>
                         <PropertyValue Property="Value" Path="OrganizationalLevel"/>
@@ -58,6 +59,22 @@
                         <PropertyValue Property="Value" Path="PersonnelArea"/>
                         <PropertyValue Property="Title" String="Personnel Area"/>
                     </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderFacets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#PersonnelArea"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#OrgUnit"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#OrgLevel"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Status"/>
+                        </Record>
+                    </Collection>
                 </Annotation>
                 <Annotation Term="UI.Facets">
                     <Collection>
@@ -81,19 +98,6 @@
                             <PropertyValue Property="Label" String="Approval Steps"/>
                             <PropertyValue Property="ID" String="Steps"/>
                             <PropertyValue Property="Target" AnnotationPath="to_Step/@UI.LineItem"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.HeaderFacets">
-                    <Collection>
-                        <Record Type="UI.ReferenceFacet">
-                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#PersonnelArea"/>
-                        </Record>
-                        <Record Type="UI.ReferenceFacet">
-                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#OrgUnit"/>
-                        </Record>
-                        <Record Type="UI.ReferenceFacet">
-                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#OrgLevel"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -164,6 +168,12 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_STEPType/ApproveType_fc">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_STEPType/Value_fc">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_APPROVE_STEPType/Delete_mc">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
@@ -188,12 +198,16 @@
                 <Annotation Term="UI.Identification">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Label" String="Approval Level"/>
-                            <PropertyValue Property="Value" Path="ApproveLevel"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Label" String="Sequence Number"/>
                             <PropertyValue Property="Value" Path="SequenceNumber"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Approval Type"/>
+                            <PropertyValue Property="Value" Path="ApproveType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Value"/>
+                            <PropertyValue Property="Value" Path="Value"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -204,19 +218,20 @@
                             <PropertyValue Property="Value" Path="SequenceNumber"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Label" String="Approval Level"/>
-                            <PropertyValue Property="Value" Path="ApproveLevel"/>
+                            <PropertyValue Property="Label" String="Approval Type"/>
+                            <PropertyValue Property="Value" Path="ApproveType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Value"/>
+                            <PropertyValue Property="Value" Path="Value"/>
                         </Record>
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/MatrixActive">
+            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/activeMatrix_ac">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/copyMatrix_ac">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/Delete_mc">
+            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/inactiveMatrix_ac">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/Update_mc">
@@ -224,6 +239,11 @@
             </Annotations>
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/to_Cond_oc">
                 <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType/MatrixStatus">
+                <Annotation Term="Common.Text" Path="StatusText">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
             </Annotations>
             <Annotations Target="cds_z4c_root_approve_matrix_sd.Z4C_ROOT_APPROVE_MATRIXType">
                 <Annotation Term="UI.Facets">
@@ -260,6 +280,9 @@
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="OrganizationalLevel"/>
                                 </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="MatrixStatus"/>
+                                </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
@@ -290,6 +313,30 @@
                             <PropertyValue Property="Label" String="Org. Level"/>
                             <PropertyValue Property="Value" Path="OrganizationalLevel"/>
                         </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Active"/>
+                            <PropertyValue Property="Action" String="cds_z4c_root_approve_matrix_sd.cds_z4c_root_approve_matrix_sd_Entities/activeMatrix"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Inactive"/>
+                            <PropertyValue Property="Action" String="cds_z4c_root_approve_matrix_sd.cds_z4c_root_approve_matrix_sd_Entities/inactiveMatrix"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Copy"/>
+                            <PropertyValue Property="Action" String="">
+                                <Annotation Term="Core.Messages">
+                                    <Collection>
+                                        <Record>
+                                            <PropertyValue Property="message" String="ERROR: Mandatory Value for Action not found"/>
+                                            <PropertyValue Property="severity" String="error"/>
+                                        </Record>
+                                    </Collection>
+                                </Annotation>
+                            </PropertyValue>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
                     </Collection>
                 </Annotation>
                 <Annotation Term="UI.LineItem">
@@ -306,9 +353,33 @@
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="OrganizationalLevel"/>
                         </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Criticality" Path="MatrixStatusCriticality"/>
+                            <PropertyValue Property="Value" Path="MatrixStatus"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
                         <Record Type="UI.DataFieldForAction">
-                            <PropertyValue Property="Label" String="Copy Matrix"/>
-                            <PropertyValue Property="Action" String="cds_z4c_root_approve_matrix_sd.cds_z4c_root_approve_matrix_sd_Entities/copyMatrix"/>
+                            <PropertyValue Property="Label" String="Copy"/>
+                            <PropertyValue Property="Action" String="">
+                                <Annotation Term="Core.Messages">
+                                    <Collection>
+                                        <Record>
+                                            <PropertyValue Property="message" String="ERROR: Mandatory Value for Action not found"/>
+                                            <PropertyValue Property="severity" String="error"/>
+                                        </Record>
+                                    </Collection>
+                                </Annotation>
+                            </PropertyValue>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Inactive"/>
+                            <PropertyValue Property="Action" String="cds_z4c_root_approve_matrix_sd.cds_z4c_root_approve_matrix_sd_Entities/inactiveMatrix"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Active"/>
+                            <PropertyValue Property="Action" String="cds_z4c_root_approve_matrix_sd.cds_z4c_root_approve_matrix_sd_Entities/activeMatrix"/>
                             <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
                         </Record>
                     </Collection>
@@ -318,6 +389,7 @@
                         <PropertyPath>PersonnelArea</PropertyPath>
                         <PropertyPath>OrganizationalUnit</PropertyPath>
                         <PropertyPath>OrganizationalLevel</PropertyPath>
+                        <PropertyPath>MatrixStatus</PropertyPath>
                     </Collection>
                 </Annotation>
             </Annotations>
