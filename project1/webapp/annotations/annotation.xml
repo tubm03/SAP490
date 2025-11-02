@@ -1,0 +1,25 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata4/sap/zui_manage_req_o4/srvd/sap/z_ui_manage_req/0001/$metadata">
+        <edmx:Include Namespace="com.sap.gateway.srvd.z_ui_manage_req.v0001" Alias="SAP__self"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>PersArea</PropertyPath>
+                        <PropertyPath>OrgUnitId</PropertyPath>
+                        <PropertyPath>PositionId</PropertyPath>
+                        <PropertyPath>Status</PropertyPath>
+                        <PropertyPath>CreatedBy</PropertyPath>
+                        <PropertyPath>CreatedAt</PropertyPath>
+                        <PropertyPath>ReqId</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
