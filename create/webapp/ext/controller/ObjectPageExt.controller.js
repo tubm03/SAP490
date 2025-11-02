@@ -95,20 +95,21 @@ sap.ui.define(
         oFileReader.onload = function (e) {
           var content = e.target.result;
           // Loại bỏ data URL prefix (data:application/pdf;base64,)
-          var sBase64Content = content.split(",")[1];
+          // var sBase64Content = content.split(",")[1];
 
           var oData = that._oRequisitionContext.getObject();
           var sReqId = oData.ReqId;
           var sApplicantId = oData.ApplicantId;
 
-          console.log("base64 content:", sBase64Content);
+          console.log("base64 content:", content);
           that._callUploadAction(
             sReqId,
             sApplicantId,
             oFile.name,
             oFile.type,
-            sBase64Content,
-            oFile.size
+            content,
+            oFile.size,
+            oFile
           );
 
           // that._uploadBinaryFile(
@@ -124,7 +125,7 @@ sap.ui.define(
           MessageBox.error("Error reading file.");
         };
 
-        oFileReader.readAsDataURL(oFile);
+        oFileReader.readAsArrayBuffer(oFile);
       },
 
       /**
@@ -137,7 +138,8 @@ sap.ui.define(
         sFileName,
         sMimeType,
         sBase64Content,
-        sSize
+        sSize,
+        oFile
       ) {
         var oModel = this.getView().getModel();
         var that = this;
@@ -146,19 +148,29 @@ sap.ui.define(
         var slug = sReqId + "/" + sApplicantId + "/" + sFileName + "/" + sSize;
         console.log("Slug header:", slug);
         var oPayload = {
+          ReqID: sReqId,
+          ApplicantId: sApplicantId,
+          AttachID: "",
+          MIMEType: sMimeType || "application/octet-stream",
           FileContent: sBase64Content,
+          FileSize: sSize,
         };
+
+        var oFormData = new FormData();
+        oFormData.append("file", oFile);
 
         // Upload file
         jQuery.ajax({
           url: "/sap/opu/odata/SAP/ZFILE_EX_SRV/FileSet",
           type: "POST",
+          data: oFormData,
+          processData: false,
+          contentType: false,
           headers: {
             // "X-CSRF-Token": sToken,
             "Content-Type": "application/pdf",
             slug: slug,
           },
-          data: JSON.stringify(oPayload),
           success: function (data) {
             this.getView().setBusy(false);
             this.onCloseUploadDialog();

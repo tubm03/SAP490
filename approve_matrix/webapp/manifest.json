@@ -144,7 +144,16 @@
             "entitySet": "Z4C_ROOT_APPROVE_MATRIX",
             "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
             "component": {
-              "name": "sap.suite.ui.generic.template.ObjectPage"
+              "name": "sap.suite.ui.generic.template.ObjectPage",
+              "settings": {
+                "sections": {
+                  "Conditions": {
+                    "tableSettings": {
+                      "selectAll": true
+                    }
+                  }
+                }
+              }
             },
             "pages": {
               "ObjectPage|to_Cond": {
@@ -170,7 +179,8 @@
                                 "path": "Value"
                               }
                             }
-                          }
+                          },
+                          "selectAll": true
                         }
                       }
                     }

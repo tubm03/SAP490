@@ -1,0 +1,41 @@
+{
+    "fileName": "id_1761546052891_1578_propertyChange",
+    "fileType": "change",
+    "changeType": "propertyChange",
+    "moduleName": "",
+    "reference": "approvematrix",
+    "packageName": "",
+    "content": {
+        "property": "width",
+        "newValue": "200px"
+    },
+    "selector": {
+        "id": "approvematrix::sap.suite.ui.generic.template.ObjectPage.view.Details::Z4C_APPROVE_CONDITION--Steps::Table-SequenceNumber",
+        "idIsLocal": false,
+        "type": "sap.m.Column"
+    },
+    "layer": "CUSTOMER_BASE",
+    "texts": {},
+    "namespace": "apps/approvematrix/changes/",
+    "projectId": "",
+    "creation": 1761546052891,
+    "originalLanguage": "",
+    "support": {
+        "generator": "changeUtils: SAPFioriTools",
+        "service": "",
+        "user": "",
+        "sapui5Version": "1.108.33",
+        "sourceChangeFileName": "",
+        "compositeCommand": ""
+    },
+    "oDataInformation": {},
+    "dependentSelector": {},
+    "validAppVersions": {
+        "from": "0.0.1",
+        "to": "0.0.1",
+        "creation": "0.0.1"
+    },
+    "jsOnly": false,
+    "variantReference": "",
+    "appDescriptorChange": false
+}
