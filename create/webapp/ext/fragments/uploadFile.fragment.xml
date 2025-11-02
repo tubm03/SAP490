@@ -1,0 +1,44 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+    <Dialog
+        id="uploadDialog"
+        title="Upload File"
+        contentWidth="500px"
+        contentHeight="300px">
+        <content>
+            <VBox id="_IDGenVBox" class="sapUiSmallMargin">
+                <Label id="_IDGenLabel" text="Select PDF File:" labelFor="fileUploader" />
+                <u:FileUploader
+                    id="fileUploader"
+                    name="file"
+                    uploadUrl=""
+                    width="100%"
+                    placeholder="Choose a PDF file..."
+                    fileType="pdf"
+                    mimeType="application/pdf"
+                    maximumFileSize="10"
+                    change=".onFileChange"
+                    uploadComplete=".onUploadComplete"
+                     />
+                <Text
+                    id="_IDGenText"
+                    text="Maximum file size: 10MB"
+                    class="sapUiTinyMarginTop" />
+            </VBox>
+        </content>
+        <beginButton>
+            <Button id="_IDGenButton"
+                text="Upload"
+                type="Emphasized"
+                press=".onUploadPress"
+                 />
+        </beginButton>
+        <endButton>
+            <Button id="_IDGenButton1"
+                text="Cancel"
+                press=".onCloseUploadDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
