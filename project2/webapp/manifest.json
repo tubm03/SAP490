@@ -1,0 +1,211 @@
+{
+  "_version": "1.48.0",
+  "sap.app": {
+    "id": "project2",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:ovp",
+      "version": "1.19.1",
+      "toolsId": "fc2c17f0-a8df-44e0-9952-6015a39ce505"
+    },
+    "dataSources": {
+      "ZUI_REQUISITION_REPORT_V2_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZUI_REQUISITION_REPORT_V2_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "localService/mainService/ZUI_REQUISITION_REPORT_V2_VAN.xml"
+        }
+      },
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation.xml",
+        "settings": {
+          "localUri": "annotations/annotation.xml"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZUI_REQUISITION_REPORT_V2/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "ZUI_REQUISITION_REPORT_V2_VAN",
+            "annotation"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.108.33",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ushell": {},
+        "sap.f": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.suite.ui.generic.template": {},
+        "sap.ovp": {},
+        "sap.ui.rta": {},
+        "sap.ui.layout": {},
+        "sap.ui.table": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "project2.i18n.i18n"
+        }
+      },
+      "mainModel": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "metadataUrlParams": {
+            "sap-value-list": "none"
+          }
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    }
+  },
+  "sap.ovp": {
+    "globalFilterModel": "mainModel",
+    "globalFilterEntitySet": "RequisitionReport",
+    "containerLayout": "resizable",
+    "enableLiveFilter": true,
+    "considerAnalyticalParameters": false,
+    "cards": {
+      "ReqByOrgUnitCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{reqByOrgUnitTitle}}",
+          "subTitle": "{{reqByOrgUnitSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByOrgUnit",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByOrgUnit",
+          "identificationAnnotationPath": "com.sap.vocabularies.UI.v1.Identification#ByOrgUnit",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#ByOrgUnit"
+        }
+      },
+      "ReqByStatusCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{reqByStatusTitle}}",
+          "subTitle": "{{reqByStatusSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByStatus",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByStatus",
+          "identificationAnnotationPath": "com.sap.vocabularies.UI.v1.Identification#ByStatus",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#ByStatus"
+        }
+      },
+      "ReqBySalaryRangeCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{reqBySalaryRangeTitle}}",
+          "subTitle": "{{reqBySalaryRangeSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#BySalaryRange",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#BySalaryRange"
+        }
+      },
+      "ReqByPersonnelAreaCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{reqByPersonnelAreaTitle}}",
+          "subTitle": "{{reqByPersonnelAreaSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByPersonnelArea",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPersonnelArea"
+        }
+      },
+      "ReqByPositionCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{reqByPositionTitle}}",
+          "subTitle": "{{reqByPositionSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByPosition",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPosition"
+        }
+      },
+      "SalaryComparisonCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{salaryComparisonTitle}}",
+          "subTitle": "{{salaryComparisonSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#SalaryComparison",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#SalaryComparison"
+        }
+      },
+      "TrendByStatusCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{trendByStatusTitle}}",
+          "subTitle": "{{trendByStatusSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#TrendByStatus",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#TrendByStatus"
+        }
+      },
+      "SalaryTrendByTimeCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{salaryTrendByTimeTitle}}",
+          "subTitle": "{{salaryTrendByTimeSubTitle}}",
+          "entitySet": "RequisitionReport",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#SalaryTrendByTime",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#SalaryTrendByTime"
+        }
+      }
+    },
+    "chartSettings": {
+      "chartType": "analytical",
+      "enableAutoBinding": true
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "analytical"
+  }
+}
