@@ -10,8 +10,143 @@ sap.ui.define([
     return {
         onInit: function () {
             console.log("✅ ListReportExt - onInit");
+            
+            // ✅ Gọi onAfterRendering sau khi UI render xong
+            this.getView().attachAfterRendering(this._setupSelectionListener, this);
         },
 
+        // ✅ Setup listener cho selection change
+        _setupSelectionListener: function () {
+            const oView = this.getView();
+            
+            // Tìm table trong ListReport (có thể là ResponsiveTable hoặc Table)
+            let oTable = oView.byId("Requisition");
+            if (!oTable) {
+                oTable = oView.byId("ListReport-Requisition");
+            }
+            if (!oTable) {
+                // Tìm tất cả tables
+                const aTables = oView.findAggregatedObjects(true, (ctrl) => {
+                    return ctrl.getMetadata && (
+                        ctrl.getMetadata().getName().indexOf("Table") !== -1 ||
+                        ctrl.getMetadata().getName().indexOf("Grid") !== -1
+                    );
+                });
+                oTable = aTables && aTables.length > 0 ? aTables[0] : null;
+            }
+            
+            if (oTable && !this._bListenerAdded) {
+                if (oTable.attachSelectionChange) {
+                    oTable.attachSelectionChange(this._updateSendMailButtonState, this);
+                    this._bListenerAdded = true;
+                    console.log("✅ Selection listener added to table:", oTable.getId());
+                }
+                
+                // ✅ Update button state ngay lần đầu
+                this._updateSendMailButtonState();
+            } else if (!oTable) {
+                console.warn("⚠️ Table not found in view");
+            }
+        },
+
+        // ✅ Update trạng thái nút Send Mail
+        _updateSendMailButtonState: function () {
+            try {
+                let aContexts = [];
+                try {
+                    aContexts = this.extensionAPI.getSelectedContexts();
+                } catch (e) {
+                    console.warn("Error getting selected contexts:", e);
+                    return;
+                }
+
+                // ✅ Không có row được select
+                if (!aContexts || aContexts.length === 0) {
+                    this._setSendMailButtonEnabled(false, "Please select a requisition");
+                    return;
+                }
+
+                // ✅ Lấy dữ liệu từ row được chọn
+                const oContext = aContexts[0];
+                const oData = oContext.getProperty();
+                
+                console.log("📊 Selected data:", oData);
+
+                // ✅ Kiểm tra trạng thái từ field "Status"
+                const sStatus = oData.Status || "";
+                const sStatusText = oData.StatusText || "";
+                
+                console.log("📌 Current Status Code:", sStatus, "| Status Text:", sStatusText);
+
+                // ✅ Disable nút nếu status là "Reject" (Status Code = 3)
+                // Status mapping: 1=Active, 2=Inactive, 3=Reject, 4=Accept, 5=Done, 6=Hiring, 7=Pending
+                const bIsRejected = sStatus === 3 || 
+                                   sStatus === "3" || 
+                                   sStatusText.toUpperCase().includes("REJECT");
+                
+                if (bIsRejected) {
+                    this._setSendMailButtonEnabled(false, "Cannot send email for rejected requisitions");
+                    return;
+                }
+
+                // ✅ Enable nút nếu status OK
+                this._setSendMailButtonEnabled(true, "");
+
+            } catch (e) {
+                console.error("❌ Error in _updateSendMailButtonState:", e);
+            }
+        },
+
+        // ✅ Set trạng thái button
+        _setSendMailButtonEnabled: function (bEnabled, sTooltip) {
+            try {
+                const oView = this.getView();
+                
+                // ✅ Tìm button bằng ID hoặc custom data
+                let oButton = null;
+                
+                // Cách 1: Tìm bằng data-action (nếu button có data attribute)
+                const $buttons = oView.$().find("[data-action='sendMailAction']");
+                if ($buttons.length > 0) {
+                    oButton = sap.ui.getCore().byId($buttons.attr("id"));
+                }
+                
+                // Cách 2: Tìm button trong toolbar
+                if (!oButton) {
+                    const oToolbar = oView.byId("CustomActions");
+                    if (oToolbar && oToolbar.getContent) {
+                        oButton = oToolbar.getContent().find(ctrl => 
+                            ctrl.getId && ctrl.getId().includes("sendMailAction")
+                        );
+                    }
+                }
+                
+                // Cách 3: Tìm tất cả buttons và lọc
+                if (!oButton) {
+                    const aAllControls = oView.findAggregatedObjects(true, (ctrl) => {
+                        return ctrl.getId && ctrl.getId().includes("sendMailAction");
+                    });
+                    if (aAllControls && aAllControls.length > 0) {
+                        oButton = aAllControls[0];
+                    }
+                }
+
+                if (oButton) {
+                    oButton.setEnabled(bEnabled);
+                    if (sTooltip) {
+                        oButton.setTooltip(sTooltip);
+                    }
+                    console.log(`✅ Button state updated - Enabled: ${bEnabled}`);
+                } else {
+                    console.warn("⚠️ Send Mail button not found in view");
+                }
+                
+            } catch (e) {
+                console.error("❌ Error setting button state:", e);
+            }
+        },
+
+        // ✅ Handler nút Send Mail
         beforeSendMail: async function () {
             console.log("🟢 beforeSendMail called");
 
@@ -30,21 +165,36 @@ sap.ui.define([
             const oContext = aContexts[0];
             this._oCurrentContext = oContext;
 
-            // ✅ Read full data from backend
-            const oData = await this._readFullDataFromBackend(oContext);
+            // ✅ Double-check trạng thái trước khi gửi
+            const oData = oContext.getProperty();
+            const sStatus = oData.Status || "";
+            const sStatusText = oData.StatusText || "";
+            
+            // Status Code 3 = Reject
+            const bIsRejected = sStatus === 3 || 
+                               sStatus === "3" || 
+                               sStatusText.toUpperCase().includes("REJECT");
+            
+            if (bIsRejected) {
+                MessageBox.error("Cannot send email for rejected requisitions");
+                return;
+            }
 
-            if (!oData) {
+            // ✅ Read full data from backend
+            const oFullData = await this._readFullDataFromBackend(oContext);
+
+            if (!oFullData) {
                 MessageBox.error("Failed to load requisition data");
                 return;
             }
 
-            console.log("📥 Full data from backend:", oData);
+            console.log("📥 Full data from backend:", oFullData);
 
-            const sPosition = oData.PositionText || "Position";
-            const sReqId = oData.ReqId || "";
-            const sFullName = oData.fullName || "Candidate Name";
-            const sEmail = oData.EmailAddress || "";
-            const sDepartment = oData.OrgUnitText || "";
+            const sPosition = oFullData.PositionText || "Position";
+            const sReqId = oFullData.ReqId || "";
+            const sFullName = oFullData.fullName || "Candidate Name";
+            const sEmail = oFullData.EmailAddress || "";
+            const sDepartment = oFullData.OrgUnitText || "";
 
             const sEmailContent = `Dear ${sFullName},
 
@@ -147,7 +297,6 @@ E-Tech Company`;
             const sSubject = Fragment.byId(oView.createId("SendMailDialog"), "subjectInput").getValue();
             const sContent = Fragment.byId(oView.createId("SendMailDialog"), "emailContentArea").getValue();
 
-            // ✅ Validate input
             if (!sEmail || !this._isValidEmail(sEmail)) {
                 MessageBox.warning("Please enter a valid email address");
                 return;
@@ -167,21 +316,15 @@ E-Tech Company`;
             let sFileBase64 = "";
 
             try {
-                // ✅ Get file từ sap.ui.unified.FileUploader
                 const oFileUploader = Fragment.byId(oView.createId("SendMailDialog"), "chooseFileBtn");
                 
                 if (oFileUploader) {
-                    console.log("📎 FileUploader object:", oFileUploader);
-                    
-                    // ✅ Cách lấy file từ FileUploader SAPUI5
                     const oDomRef = oFileUploader.getDomRef();
                     const aFiles = oDomRef?.querySelector("input[type='file']")?.files;
                     
                     if (aFiles && aFiles.length > 0) {
                         const oFile = aFiles[0];
-                        console.log("📎 File selected:", oFile.name, "Size:", oFile.size, "Type:", oFile.type);
                         
-                        // ✅ Kiểm tra file size (max 5MB)
                         if (oFile.size > 5242880) {
                             MessageBox.warning("File size exceeds 5MB limit");
                             return;
@@ -189,20 +332,13 @@ E-Tech Company`;
                         
                         sFileName = oFile.name;
                         sFileBase64 = await oController._readFileAsBase64(oFile);
-                        console.log("✅ File converted to Base64, length:", sFileBase64.length);
-                    } else {
-                        console.log("ℹ️ No file selected - email will be sent without attachment");
                     }
-                } else {
-                    console.warn("⚠️ FileUploader control not found");
                 }
             } catch (err) {
                 console.error("❌ Error reading file:", err);
-                console.log("📋 Stack trace:", err.stack);
                 MessageBox.warning("Error reading file. Continuing without attachment...");
             }
 
-            // ✅ Confirm before sending
             MessageBox.confirm(`Send email to: ${sEmail}?`, {
                 title: "Confirm Send",
                 onClose: function (oAction) {
@@ -221,33 +357,21 @@ E-Tech Company`;
                     
                     reader.onload = function () {
                         try {
-                            // ✅ Tách phần base64 từ Data URL
                             const result = reader.result;
                             const base64 = result.indexOf(",") > -1 ? result.split(",")[1] : result;
-                            console.log("✅ File read successfully, Base64 length:", base64.length);
                             resolve(base64);
                         } catch (err) {
-                            console.error("Error processing file:", err);
                             reject(err);
                         }
                     };
                     
                     reader.onerror = function () {
-                        console.error("FileReader error:", reader.error);
                         reject(reader.error);
                     };
                     
-                    reader.onprogress = function (event) {
-                        if (event.lengthComputable) {
-                            console.log("📖 Reading file: " + Math.round((event.loaded / event.total) * 100) + "%");
-                        }
-                    };
-                    
-                    console.log("📖 Starting to read file:", file.name, "size:", file.size);
                     reader.readAsDataURL(file);
                     
                 } catch (err) {
-                    console.error("Error in FileReader setup:", err);
                     reject(err);
                 }
             });
@@ -261,19 +385,13 @@ E-Tech Company`;
 
             try {
                 console.log("📤 Calling OData Action: sendMail");
-                console.log("   Email:", sEmail);
-                console.log("   Subject:", sSubject);
 
                 const oModel = this.getOwnerComponent().getModel();
                 
-                // ✅ Extract ReqId and ApplicantId from context
                 const oKey = this._oCurrentContext.getProperty();
                 const sReqId = oKey.ReqId;
                 const sApplicantId = oKey.ApplicantId;
 
-                console.log("📤 Action Parameters - ReqId:", sReqId, "ApplicantId:", sApplicantId);
-
-                // ✅ Action path using FunctionImport
                 const sActionPath = "/sendMail";
 
                 const oPayload = {
@@ -286,26 +404,18 @@ E-Tech Company`;
                     FileBase64: sFileBase64 || ""
                 };
 
-                console.log("📤 Full Payload:", JSON.stringify(oPayload, null, 2));
-
-                // ✅ Call OData FunctionImport - refreshSecurityToken first
                 oModel.refreshSecurityToken(
                     function (oResponse) {
-                        console.log("✅ Security token refreshed");
-                        
                         oModel.callFunction(sActionPath, {
                             method: "POST",
                             urlParameters: oPayload,
                             bUrlEncoded: false,
                             success: function (oResponse) {
                                 BusyIndicator.hide();
-                                console.log("✅ OData Action Success:", oResponse);
 
-                                // ✅ If response has sendMail object = SUCCESS
                                 if (oResponse && oResponse.sendMail) {
                                     MessageToast.show("✅ Email sent successfully!");
 
-                                    // ✅ Close dialog
                                     if (oController._pSendMailDialog) {
                                         oController._pSendMailDialog.then(function (dlg) {
                                             dlg.close();
@@ -314,12 +424,12 @@ E-Tech Company`;
                                         });
                                     }
 
-                                    // ✅ Refresh list
                                     if (oController.extensionAPI && oController.extensionAPI.refresh) {
                                         oController.extensionAPI.refresh();
                                     }
 
-                                    console.log("✅ Email send complete");
+                                    // ✅ Update button state sau khi refresh
+                                    oController._updateSendMailButtonState();
                                 } else {
                                     MessageBox.error("❌ No response from server");
                                 }
