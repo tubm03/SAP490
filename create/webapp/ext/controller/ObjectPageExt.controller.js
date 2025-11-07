@@ -4,14 +4,43 @@ sap.ui.define(
     "sap/m/MessageBox",
     "sap/ui/core/Fragment",
     "sap/ui/core/mvc/Controller",
+    "sap/ui/core/mvc/ControllerExtension",
   ],
-  function (MessageToast, MessageBox, Fragment, Controller) {
+  function (MessageToast, MessageBox, Fragment, ControllerExtension) {
     "use strict";
 
     return {
       _oRequisitionContext: null,
       _oUploadDialog: null,
       _selectedFile: null,
+
+      override: {
+        onInit: function () {
+          // Get the view and set up binding context change listener
+          var oView = this.getView();
+          oView.attachEventOnce(this._setButtonVisibility, this);
+        },
+      },
+
+      // Method to set button visibility based on ReqId
+      _setButtonVisibility: function () {
+        var oView = this.getView();
+        var oBindingContext = oView.getBindingContext();
+        var oUploadButton = oView.byId("action::uploadFileButton");
+        if (oBindingContext) {
+          var oData = oBindingContext.getObject();
+          if (!oData) {
+            oUploadButton.setVisible(true);
+          } else {
+            oUploadButton.setVisible(false);
+          }
+        }
+      },
+
+      // Alternative approach: Control visibility dynamically
+      onBeforeRendering: function () {
+        this._setButtonVisibility();
+      },
 
       UploadFile: function (oEvent) {
         var oView = this.getView();
