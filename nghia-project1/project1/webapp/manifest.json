@@ -1,7 +1,7 @@
 {
   "_version": "1.48.0",
   "sap.app": {
-    "id": "approvematrix",
+    "id": "project1",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,14 +13,14 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.19.1",
-      "toolsId": "6d4344a6-0397-4c99-9516-515966f2a85f"
+      "toolsId": "2d6d09e6-685f-48b3-b22a-90ae22005a8e"
     },
     "dataSources": {
-      "Z4UI_ROOT_APPR_MATRIX_V2_VAN": {
-        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='Z4UI_ROOT_APPR_MATRIX_V2_VAN',Version='0001')/$value/",
+      "Z_UI_MANAGE_REQ_HRBP_O2_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='Z_UI_MANAGE_REQ_HRBP_O2_VAN',Version='0001')/$value/",
         "type": "ODataAnnotation",
         "settings": {
-          "localUri": "localService/mainService/Z4UI_ROOT_APPR_MATRIX_V2_VAN.xml"
+          "localUri": "localService/mainService/Z_UI_MANAGE_REQ_HRBP_O2_VAN.xml"
         }
       },
       "annotation": {
@@ -31,28 +31,15 @@
         }
       },
       "mainService": {
-        "uri": "/sap/opu/odata/sap/Z4UI_ROOT_APPR_MATRIX_V2/",
+        "uri": "/sap/opu/odata/sap/Z_UI_MANAGE_REQ_HRBP_O2/",
         "type": "OData",
         "settings": {
           "annotations": [
-            "Z4UI_ROOT_APPR_MATRIX_V2_VAN",
+            "Z_UI_MANAGE_REQ_HRBP_O2_VAN",
             "annotation"
           ],
           "localUri": "localService/mainService/metadata.xml",
           "odataVersion": "2.0"
-        }
-      }
-    },
-    "crossNavigation": {
-      "inbounds": {
-        "zapproval_matrix-display": {
-          "semanticObject": "zapproval_matrix",
-          "action": "display",
-          "title": "{{zapproval_matrix-display.flpTitle}}",
-          "signature": {
-            "parameters": {},
-            "additionalParameters": "allowed"
-          }
         }
       }
     }
@@ -80,6 +67,7 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
+        "sap.ui.layout": {},       
         "sap.ushell": {},
         "sap.f": {},
         "sap.ui.comp": {},
@@ -95,7 +83,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "approvematrix.i18n.i18n"
+          "bundleName": "project1.i18n.i18n"
         }
       },
       "": {
@@ -122,6 +110,27 @@
       "config": {},
       "routes": [],
       "targets": {}
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.suite.ui.generic.template.ListReport.view.ListReport": {
+            "controllerName": "project1.ext.controller.ListReportExt",
+            "sap.ui.generic.app": {
+              "Requisition": {
+                "EntitySet": "Requisition",
+                "Actions": {
+                  "sendMail": {
+                    "id": "sendMailAction",
+                    "text": "Send Mail",
+                    "press": "beforeSendMail"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "sap.ui.generic.app": {
@@ -133,8 +142,8 @@
       "showDraftToggle": false
     },
     "pages": {
-      "ListReport|Z4C_ROOT_APPROVE_MATRIX": {
-        "entitySet": "Z4C_ROOT_APPROVE_MATRIX",
+      "ListReport|Requisition": {
+        "entitySet": "Requisition",
         "component": {
           "name": "sap.suite.ui.generic.template.ListReport",
           "list": true,
@@ -153,54 +162,11 @@
           }
         },
         "pages": {
-          "ObjectPage|Z4C_ROOT_APPROVE_MATRIX": {
-            "entitySet": "Z4C_ROOT_APPROVE_MATRIX",
+          "ObjectPage|Requisition": {
+            "entitySet": "Requisition",
             "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
             "component": {
-              "name": "sap.suite.ui.generic.template.ObjectPage",
-              "settings": {
-                "sections": {
-                  "Conditions": {
-                    "tableSettings": {
-                      "selectAll": true
-                    }
-                  }
-                }
-              }
-            },
-            "pages": {
-              "ObjectPage|to_Cond": {
-                "navigationProperty": "to_Cond",
-                "entitySet": "Z4C_APPROVE_CONDITION",
-                "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
-                "component": {
-                  "name": "sap.suite.ui.generic.template.ObjectPage",
-                  "settings": {
-                    "sections": {
-                      "Steps": {
-                        "createMode": "inline",
-                        "tableSettings": {
-                          "createWithParameterDialog": {
-                            "fields": {
-                              "SequenceNumber": {
-                                "path": "SequenceNumber"
-                              },
-                              "ApproveType": {
-                                "path": "ApproveType"
-                              },
-                              "Value": {
-                                "path": "Value"
-                              }
-                            }
-                          },
-                          "selectAll": true
-                        }
-                      }
-                    }
-                  }
-                },
-                "pages": {}
-              }
+              "name": "sap.suite.ui.generic.template.ObjectPage"
             }
           }
         }

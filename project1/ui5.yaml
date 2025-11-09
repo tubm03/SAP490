@@ -2,7 +2,7 @@
 
 specVersion: "3.1"
 metadata:
-  name: approvematrix
+  name: project1
 type: application
 server:
   customMiddleware:
@@ -17,7 +17,7 @@ server:
           url: https://ui5.sap.com
         backend:
           - path: /sap
-            url: https://s35.gb.ucc.cit.tum.de
+            url: https://s35lp1.ucc.cit.tum.de:8100
             client: '302'
     - name: fiori-tools-appreload
       afterMiddleware: compression
@@ -30,4 +30,3 @@ server:
       configuration:
         flp:
           theme: sap_horizon
-          path: test/flp.html

@@ -5,30 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>App Title</title>
+    <title>Approval Matrix</title>
+
     <style>
         html,
         body,
-        body>div,
-        #container,
-        #container-uiarea {
+        #container {
             height: 100%;
+            margin: 0;
         }
     </style>
-    <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-resourceroots='{
-            "approvematrix": "./"
-        }' data-sap-ui-oninit="module:sap/ui/core/ComponentSupport" data-sap-ui-compatVersion="edge"
-        data-sap-ui-async="true" data-sap-ui-frameOptions="trusted"></script>
 
-    <script src="resources/sap-ui-core.js" id="sap-ui-bootstrap"
-        data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.ux3" data-sap-ui-theme="sap_goldreflection">
+    <!-- ✅ Only ONE bootstrap -->
+    <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compatVersion="edge" data-sap-ui-frameOptions="trusted"
+        data-sap-ui-oninit="module:sap/ui/core/ComponentSupport" data-sap-ui-resourceroots='{
+            "approvematrix": "./"
+        }'>
         </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact" id="content">
     <div data-sap-ui-component data-name="approvematrix" data-id="container" data-settings='{"id" : "approvematrix"}'
-        data-handle-validation="true"></div>
+        data-handle-validation="true">
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: approvematrix
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          url: https://s35.gb.ucc.cit.tum.de/
+          client: '302'
+        app:
+          name: ZAPPR_MATRIX
+          description: Deploy Approval Matrix 08/11
+          package: $TMP
+          transport: ''
+        exclude:
+          - /test/

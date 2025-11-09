@@ -1,0 +1,221 @@
+{
+  "_version": "1.48.0",
+  "sap.app": {
+    "id": "project1",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.18.7",
+      "toolsId": "5a3da076-293c-4e79-8372-0224416ffc99"
+    },
+    "dataSources": {
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation.xml",
+        "settings": {
+          "localUri": "annotations/annotation.xml"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata4/sap/zui_manage_req_o4/srvd/sap/z_ui_manage_req/0001/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "annotation"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.108.33",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ObjectPage.ObjectPageController": {
+            "controllerName": "project1.ext.controller.ObjectPageExt"
+          }
+        }
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "project1.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "ZC_MANAGE_REQList",
+          "target": "ZC_MANAGE_REQList"
+        },
+        {
+          "pattern": "ZC_MANAGE_REQ({key}):?query:",
+          "name": "ZC_MANAGE_REQObjectPage",
+          "target": "ZC_MANAGE_REQObjectPage"
+        }
+      ],
+      "targets": {
+        "ZC_MANAGE_REQList": {
+          "type": "Component",
+          "id": "ZC_MANAGE_REQList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/ZC_MANAGE_REQ",
+              "variantManagement": "Page",
+              "navigation": {
+                "ZC_MANAGE_REQ": {
+                  "detail": {
+                    "route": "ZC_MANAGE_REQObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  },
+                  "columns": {
+                    "DataField::CreatedAt": {
+                      "width": "10%"
+                    },
+                    "DataField::CreatedBy": {
+                      "width": "10%"
+                    },
+                    "DataField::Status": {
+                      "width": "10%"
+                    },
+                    "DataField::OrgUnitId": {
+                      "width": "20%"
+                    },
+                    "DataField::PositionId": {
+                      "width": "20%"
+                    },
+                    "DataField::PersArea": {
+                      "width": "20%"
+                    },
+                    "DataField::ReqId": {
+                      "width": "10%"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ZC_MANAGE_REQObjectPage": {
+          "type": "Component",
+          "id": "ZC_MANAGE_REQObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "contextPath": "/ZC_MANAGE_REQ",
+              "controlConfiguration": {
+                "_HistoryLog/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "columns": {
+                    "DataField::LogTimestamp": {
+                      "width": "25%"
+                    },
+                    "DataField::ApprBy": {
+                      "width": "25%"
+                    },
+                    "DataField::Action": {
+                      "width": "25%"
+                    },
+                    "DataField::LogComment": {
+                      "width": "25%"
+                    }
+                  }
+                },
+                "_Attachments/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "columns": {
+                    "DataField::FileName": {
+                      "width": "25%"
+                    },
+                    "DataField::CreatedAt": {
+                      "width": "25%"
+                    },
+                    "DataField::CreatedBy": {
+                      "width": "25%"
+                    },
+                    "DataField::FileSize": {
+                      "width": "25%"
+                    }
+                  },
+                  "tableSettings": {
+                    "selectionMode": "Single"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  }
+}

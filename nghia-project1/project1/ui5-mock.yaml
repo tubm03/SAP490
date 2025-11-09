@@ -2,7 +2,7 @@
 
 specVersion: "3.1"
 metadata:
-  name: approvematrix
+  name: project1
 type: application
 server:
   customMiddleware:
@@ -30,4 +30,15 @@ server:
       configuration:
         flp:
           theme: sap_horizon
-          path: test/flp.html
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /sap/opu/odata/sap/Z_UI_MANAGE_REQ_HRBP_O2
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations:
+          - localPath: ./webapp/localService/mainService/Z_UI_MANAGE_REQ_HRBP_O2_VAN.xml
+            urlPath: /sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='Z_UI_MANAGE_REQ_HRBP_O2_VAN',Version='0001')/$value/
