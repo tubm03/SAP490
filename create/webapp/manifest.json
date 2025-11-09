@@ -124,6 +124,12 @@
                       "id": "uploadFileButton",
                       "text": "Upload File",
                       "press": "UploadFile"
+                    },
+                    "simulate": {
+                      "id": "simulateButton",
+                      "text": "Simulate",
+                      "press": "simulate",
+                      "requiresSelection": false
                     }
                   }
                 }

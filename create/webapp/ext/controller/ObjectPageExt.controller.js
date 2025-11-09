@@ -283,6 +283,9 @@ sap.ui.define(
         var oFileUploader = oEvent.getSource();
         oFileUploader.removeAllHeaderParameters();
       },
+      simulate: function (oEvent) {
+        MessageToast.show("Custom handler invoked.");
+      },
     };
   }
 );
