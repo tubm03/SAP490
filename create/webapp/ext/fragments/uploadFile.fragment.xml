@@ -24,7 +24,7 @@
                      />
                 <Text
                     id="_IDGenText"
-                    text="Maximum file size: 10MB"
+                    text="Maximum file size: 5MB"
                     class="sapUiTinyMarginTop" />
             </VBox>
         </content>

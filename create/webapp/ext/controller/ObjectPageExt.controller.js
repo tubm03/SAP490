@@ -8,46 +8,19 @@ sap.ui.define(
   ],
   function (MessageToast, MessageBox, Fragment, ControllerExtension) {
     "use strict";
-
     return {
       _oRequisitionContext: null,
       _oUploadDialog: null,
       _selectedFile: null,
 
-      override: {
-        onInit: function () {
-          // Get the view and set up binding context change listener
-          var oView = this.getView();
-          oView.attachEventOnce(this._setButtonVisibility, this);
-        },
-      },
-
-      // Method to set button visibility based on ReqId
-      _setButtonVisibility: function () {
-        var oView = this.getView();
-        var oBindingContext = oView.getBindingContext();
-        var oUploadButton = oView.byId("action::uploadFileButton");
-        if (oBindingContext) {
-          var oData = oBindingContext.getObject();
-          if (!oData) {
-            oUploadButton.setVisible(true);
-          } else {
-            oUploadButton.setVisible(false);
-          }
-        }
-      },
-
-      // Alternative approach: Control visibility dynamically
-      onBeforeRendering: function () {
-        this._setButtonVisibility();
-      },
-
       UploadFile: function (oEvent) {
         var oView = this.getView();
         var oBindingContext = oView.getBindingContext();
-
-        if (!oBindingContext) {
-          MessageBox.error("Please select a requisition first.");
+        var oData = oBindingContext ? oBindingContext.getObject() : null;
+        console.log("UploadFile called. Binding context data:", oData);
+        var oReqId = oData ? oData.ReqId : null;
+        if (!oReqId) {
+          MessageBox.error("Please save requisition first.");
           return;
         }
 
@@ -91,8 +64,10 @@ sap.ui.define(
             return;
           }
 
-          var iMaxFileSize = 10 * 1024 * 1024; // 10MB
+          var iMaxFileSize = 5 * 1024 * 1024; // 10MB
+          console.log("Max file size:", iMaxFileSize);
           if (oFile.size > iMaxFileSize) {
+            console.log("File size:", oFile.size);
             MessageBox.warning("File size exceeds 10MB limit.");
             oFileUploader.clear();
             this._selectedFile = null;
