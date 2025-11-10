@@ -1,0 +1,106 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    
+    <Dialog
+        id="approverListDialog"
+        title="Approver List"
+        contentWidth="700px"
+        contentHeight="500px"
+        resizable="true"
+        draggable="true">
+        
+        <content>
+            <VBox class="sapUiSmallMargin">
+                
+                <!-- Header Info -->
+                <!-- <HBox class="sapUiSmallMarginBottom" justifyContent="SpaceBetween">
+                    <VBox>
+                        <Label text="Request ID:" design="Bold"/>
+                        <Text text="{viewModel>/reqId}"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="Applicant:" design="Bold"/>
+                        <Text text="{viewModel>/applicantName}"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="Total Steps:" design="Bold"/>
+                        <Text text="{viewModel>/totalSteps}"/>
+                    </VBox>
+                </HBox> -->
+                
+                <!-- <OverflowToolbar>
+                    <Title text="Approval Flow" level="H2"/>
+                    <ToolbarSpacer/>
+                    <SearchField
+                        width="200px"
+                        search=".onSearchApprover"
+                        placeholder="Search..."/>
+                </OverflowToolbar> -->
+                
+                <!-- Approver Table -->
+                <Table
+                    id="approverTable"
+                    items="{viewModel>/approvers}"
+                    growing="true"
+                    growingThreshold="20"
+                    mode="None"
+                    class="sapUiSmallMarginTop">
+                    
+                    <columns>
+                        <Column width="80px">
+                            <Text text="Step"/>
+                        </Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Position ID"/>
+                        </Column>
+                        <Column width="120px">
+                            <Text text="Person ID"/>
+                        </Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Person Account"/>
+                        </Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Name"/>
+                        </Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Email"/>
+                        </Column>
+                    </columns>
+                    
+                    <items>
+                        <ColumnListItem>
+                            <cells>                                
+                                <Text text="{viewModel>seq_no}"/>                                
+                                <Text text="{viewModel>pos_id}"/>                                
+                                <Text text="{viewModel>per_id}"/>
+                                <ObjectIdentifier
+                                    title="{viewModel>per_acc}"/>                                
+                                <Text text="{viewModel>name}"/>
+                                <Text text="{viewModel>email}"/>                            
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                    
+                </Table>
+                
+            </VBox>
+        </content>
+        
+        <beginButton>
+            <Button
+                text="Close"
+                press=".onCloseApproverDialog"/>
+        </beginButton>
+        
+        <!-- <endButton>
+            <Button
+                text="Export Excel"
+                icon="sap-icon://excel-attachment"
+                press=".onExportApprovers"
+                type="Emphasized"/>
+        </endButton> -->
+        
+    </Dialog>
+    
+</core:FragmentDefinition>

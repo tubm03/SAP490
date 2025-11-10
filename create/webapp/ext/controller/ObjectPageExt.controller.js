@@ -5,8 +5,19 @@ sap.ui.define(
     "sap/ui/core/Fragment",
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/mvc/ControllerExtension",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/json/JSONModel",
   ],
-  function (MessageToast, MessageBox, Fragment, ControllerExtension) {
+  function (
+    MessageToast,
+    MessageBox,
+    Fragment,
+    ControllerExtension,
+    Filter,
+    FilterOperator,
+    JSONModel
+  ) {
     "use strict";
     return {
       _oRequisitionContext: null,
@@ -20,7 +31,7 @@ sap.ui.define(
         console.log("UploadFile called. Binding context data:", oData);
         var oReqId = oData ? oData.ReqId : null;
         if (!oReqId) {
-          MessageBox.error("Please save requisition first.");
+          MessageBox.error("Please create requisition first.");
           return;
         }
 
@@ -284,8 +295,233 @@ sap.ui.define(
         oFileUploader.removeAllHeaderParameters();
       },
       simulate: function (oEvent) {
-        MessageToast.show("Custom handler invoked.");
+        var that = this;
+        var oView = this.getView();
+        var oModel = oView.getModel();
+        var oBindingContext = oView.getBindingContext();
+
+        if (!oBindingContext) {
+          sap.m.MessageBox.error("Không tìm thấy dữ liệu yêu cầu");
+          return;
+        }
+
+        var sPath = oBindingContext.getPath();
+        var oData = oModel.getProperty(sPath);
+        console.log("Requisition data:", oData);
+
+        if (!oData.ApplicantId) {
+          sap.m.MessageBox.error("Applicant ID is required for simulation");
+          return;
+        }
+
+        if (!oData.PersArea || !oData.PositionId) {
+          sap.m.MessageBox.error(
+            "Personnel Area and Position ID are required for simulation"
+          );
+          return;
+        }
+
+        if (!oData.BasicSalary || !oData.BonusSalary) {
+          sap.m.MessageBox.error(
+            "Basic Salary and Bonus Salary are required for simulation"
+          );
+          return;
+        }
+
+        var mParameters = {
+          ReqId: "",
+          ApplicantId: oData.ApplicantId,
+          basic_sal: oData.BasicSalary,
+          bonus_sal: oData.BonusSalary,
+          pers_area: oData.PersArea,
+          position_id: oData.PositionId,
+        };
+
+        console.log(mParameters);
+        sap.ui.core.BusyIndicator.show(0);
+
+        oModel.callFunction("/simulateRequisition", {
+          method: "POST",
+          urlParameters: mParameters,
+          success: function (oResponse) {
+            sap.ui.core.BusyIndicator.hide();
+
+            var aApprovers = oResponse.results || [];
+            console.log("Approver list:", aApprovers);
+
+            if (aApprovers.length > 0) {
+              that._showApproverDialog(aApprovers, oData);
+            } else {
+              sap.m.MessageBox.information("Cannot find approver");
+            }
+          },
+          error: function (oError) {
+            sap.ui.core.BusyIndicator.hide();
+
+            var sMessage = "Error simulating requisition";
+            if (oError.responseText) {
+              try {
+                var oErrorData = JSON.parse(oError.responseText);
+                sMessage = oErrorData.error.message.value || sMessage;
+              } catch (e) {
+                console.error(e);
+              }
+            }
+
+            sap.m.MessageBox.error(sMessage);
+          },
+        });
       },
+
+      _showApproverDialog: function (aApprovers, oReqData) {
+        var that = this;
+        var oView = this.getView();
+
+        // Prepare data object
+        var oDialogData = {
+          reqId: oReqData.ReqId,
+          applicantName: oReqData.ApplicantName || oReqData.ApplicantId,
+          totalSteps: aApprovers.length,
+          approvers: aApprovers,
+        };
+
+        // Load fragment if not exists
+        if (!this._oApproverDialog) {
+          Fragment.load({
+            id: oView.getId(),
+            name: "create.ext.fragments.ApproverListDialog",
+            controller: this,
+          })
+            .then(function (oDialog) {
+              that._oApproverDialog = oDialog;
+              oView.addDependent(that._oApproverDialog);
+
+              // Create JSONModel using sap.ui.require
+              sap.ui.require(
+                ["sap/ui/model/json/JSONModel"],
+                function (JSONModel) {
+                  var oViewModel = new JSONModel(oDialogData);
+                  that._oApproverDialog.setModel(oViewModel, "viewModel");
+                  that._oApproverDialog.open();
+                }
+              );
+            })
+            .catch(function (oError) {
+              MessageBox.error("Error loading dialog: " + oError.message);
+            });
+        } else {
+          // Update existing model
+          sap.ui.require(["sap/ui/model/json/JSONModel"], function (JSONModel) {
+            var oViewModel = new JSONModel(oDialogData);
+            that._oApproverDialog.setModel(oViewModel, "viewModel");
+            that._oApproverDialog.open();
+          });
+        }
+      },
+
+      onCloseApproverDialog: function () {
+        if (this._oApproverDialog) {
+          this._oApproverDialog.close();
+        }
+      },
+
+      // onSearchApprover: function (oEvent) {
+      //   var sQuery = oEvent.getParameter("query");
+      //   var oTable = this.byId("approverTable");
+      //   var oBinding = oTable.getBinding("items");
+
+      //   if (!oBinding) {
+      //     return;
+      //   }
+
+      //   var aFilters = [];
+      //   if (sQuery) {
+      //     aFilters.push(
+      //       new sap.ui.model.Filter({
+      //         filters: [
+      //           new sap.ui.model.Filter(
+      //             "per_id",
+      //             sap.ui.model.FilterOperator.Contains,
+      //             sQuery
+      //           ),
+      //           new sap.ui.model.Filter(
+      //             "per_acc",
+      //             sap.ui.model.FilterOperator.Contains,
+      //             sQuery
+      //           ),
+      //           new sap.ui.model.Filter(
+      //             "pos_id",
+      //             sap.ui.model.FilterOperator.Contains,
+      //             sQuery
+      //           ),
+      //           new sap.ui.model.Filter(
+      //             "seq_no",
+      //             sap.ui.model.FilterOperator.Contains,
+      //             sQuery
+      //           ),
+      //         ],
+      //         and: false,
+      //       })
+      //     );
+      //   }
+
+      //   oBinding.filter(aFilters);
+      // },
+
+      // onExportApprovers: function () {
+      //   var oModel = this._oApproverDialog.getModel("viewModel");
+      //   var aApprovers = oModel.getProperty("/approvers");
+
+      //   if (!aApprovers || aApprovers.length === 0) {
+      //     MessageToast.show("No data to export");
+      //     return;
+      //   }
+
+      //   // Prepare export data
+      //   var aExportData = aApprovers.map(function (oApprover) {
+      //     return {
+      //       Step: oApprover.seq_no,
+      //       "Person ID": oApprover.per_id,
+      //       "Person Account": oApprover.per_acc,
+      //       "Position ID": oApprover.pos_id,
+      //     };
+      //   });
+
+      //   // Export to Excel
+      //   this._exportToExcel(aExportData, "Approver_List");
+      // },
+
+      // _exportToExcel: function (aData, sFileName) {
+      //   sap.ui.require(["sap/ui/export/Spreadsheet"], function (Spreadsheet) {
+      //     var aCols = Object.keys(aData[0]).map(function (sKey) {
+      //       return {
+      //         label: sKey,
+      //         property: sKey,
+      //         type: "String",
+      //       };
+      //     });
+
+      //     var oSettings = {
+      //       workbook: {
+      //         columns: aCols,
+      //         hierarchyLevel: "Level",
+      //       },
+      //       dataSource: aData,
+      //       fileName: sFileName + ".xlsx",
+      //       worker: false,
+      //     };
+
+      //     var oSpreadsheet = new Spreadsheet(oSettings);
+      //     oSpreadsheet
+      //       .build()
+      //       .then(function () {
+      //         MessageToast.show("Excel file exported successfully");
+      //       })
+      //       .catch(function (sError) {
+      //         MessageBox.error("Error exporting file: " + sError);
+      //       });
+      //   });
+      // },
     };
   }
 );
