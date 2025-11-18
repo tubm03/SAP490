@@ -12,8 +12,7 @@
     "resources": "resources.json",
     "sourceTemplate": {
       "id": "@sap/generator-fiori:ovp",
-      "version": "1.19.1",
-      "toolsId": "fc2c17f0-a8df-44e0-9952-6015a39ce505"
+      "version": "1.19.1"
     },
     "dataSources": {
       "ZUI_REQUISITION_REPORT_V2_VAN": {
@@ -106,19 +105,6 @@
     "enableLiveFilter": true,
     "considerAnalyticalParameters": false,
     "cards": {
-      "ReqByOrgUnitCard": {
-        "model": "mainModel",
-        "template": "sap.ovp.cards.charts.analytical",
-        "settings": {
-          "title": "{{reqByOrgUnitTitle}}",
-          "subTitle": "{{reqByOrgUnitSubTitle}}",
-          "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByOrgUnit",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByOrgUnit",
-          "identificationAnnotationPath": "com.sap.vocabularies.UI.v1.Identification#ByOrgUnit",
-          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#ByOrgUnit"
-        }
-      },
       "ReqByStatusCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
@@ -127,20 +113,18 @@
           "subTitle": "{{reqByStatusSubTitle}}",
           "entitySet": "RequisitionReport",
           "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByStatus",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByStatus",
-          "identificationAnnotationPath": "com.sap.vocabularies.UI.v1.Identification#ByStatus",
-          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#ByStatus"
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByStatus"
         }
       },
-      "ReqBySalaryRangeCard": {
+      "ReqByOrgUnitCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{reqBySalaryRangeTitle}}",
-          "subTitle": "{{reqBySalaryRangeSubTitle}}",
+          "title": "{{reqByOrgUnitTitle}}",
+          "subTitle": "{{reqByOrgUnitSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#BySalaryRange",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#BySalaryRange"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByOrgUnit",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByOrgUnit"
         }
       },
       "ReqByPersonnelAreaCard": {
@@ -165,37 +149,15 @@
           "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPosition"
         }
       },
-      "SalaryComparisonCard": {
+      "AvgCompletionHoursByPositionCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{salaryComparisonTitle}}",
-          "subTitle": "{{salaryComparisonSubTitle}}",
+          "title": "{{avgCompletionByPositionTitle}}",
+          "subTitle": "{{avgCompletionByPositionSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#SalaryComparison",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#SalaryComparison"
-        }
-      },
-      "TrendByStatusCard": {
-        "model": "mainModel",
-        "template": "sap.ovp.cards.charts.analytical",
-        "settings": {
-          "title": "{{trendByStatusTitle}}",
-          "subTitle": "{{trendByStatusSubTitle}}",
-          "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#TrendByStatus",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#TrendByStatus"
-        }
-      },
-      "SalaryTrendByTimeCard": {
-        "model": "mainModel",
-        "template": "sap.ovp.cards.charts.analytical",
-        "settings": {
-          "title": "{{salaryTrendByTimeTitle}}",
-          "subTitle": "{{salaryTrendByTimeSubTitle}}",
-          "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#SalaryTrendByTime",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#SalaryTrendByTime"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#AvgCompletionHoursByPosition",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#AvgCompletionHoursByPosition"
         }
       }
     },
