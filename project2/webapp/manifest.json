@@ -105,59 +105,48 @@
     "enableLiveFilter": true,
     "considerAnalyticalParameters": false,
     "cards": {
-      "ReqByStatusCard": {
+      "ByStatusCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{reqByStatusTitle}}",
-          "subTitle": "{{reqByStatusSubTitle}}",
+          "title": "{{byStatusByOrgTitle}}",
+          "subTitle": "{{byStatusByOrgSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByStatus",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByStatus"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByStatusByOrg",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByStatusByOrg"
         }
       },
-      "ReqByOrgUnitCard": {
+      "SalaryByPositionCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{reqByOrgUnitTitle}}",
-          "subTitle": "{{reqByOrgUnitSubTitle}}",
+          "title": "{{salaryByPositionByOrgTitle}}",
+          "subTitle": "{{salaryByPositionByOrgSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByOrgUnit",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByOrgUnit"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#SalaryByPositionByOrg",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#SalaryByPositionByOrg"
         }
       },
-      "ReqByPersonnelAreaCard": {
+      "CompletionTimeCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{reqByPersonnelAreaTitle}}",
-          "subTitle": "{{reqByPersonnelAreaSubTitle}}",
+          "title": "{{completionTimeByPositionByOrgTitle}}",
+          "subTitle": "{{completionTimeByPositionByOrgSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByPersonnelArea",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPersonnelArea"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#CompletionTimeByPositionByOrg",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#CompletionTimeByPositionByOrg"
         }
       },
-      "ReqByPositionCard": {
+      "ByPersonnelAreaCard": {
         "model": "mainModel",
         "template": "sap.ovp.cards.charts.analytical",
         "settings": {
-          "title": "{{reqByPositionTitle}}",
-          "subTitle": "{{reqByPositionSubTitle}}",
+          "title": "{{byPersonnelAreaByOrgTitle}}",
+          "subTitle": "{{byPersonnelAreaByOrgSubTitle}}",
           "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByPosition",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPosition"
-        }
-      },
-      "AvgCompletionHoursByPositionCard": {
-        "model": "mainModel",
-        "template": "sap.ovp.cards.charts.analytical",
-        "settings": {
-          "title": "{{avgCompletionByPositionTitle}}",
-          "subTitle": "{{avgCompletionByPositionSubTitle}}",
-          "entitySet": "RequisitionReport",
-          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#AvgCompletionHoursByPosition",
-          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#AvgCompletionHoursByPosition"
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#ByPersonnelAreaByOrg",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#ByPersonnelAreaByOrg"
         }
       }
     },
