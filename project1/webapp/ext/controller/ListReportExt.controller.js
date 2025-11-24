@@ -414,7 +414,7 @@ E-Tech Company`;
                                 BusyIndicator.hide();
 
                                 if (oResponse && oResponse.sendMail) {
-                                    MessageToast.show("✅ Email sent successfully!");
+                                    MessageToast.show("Email sent successfully!");
 
                                     if (oController._pSendMailDialog) {
                                         oController._pSendMailDialog.then(function (dlg) {

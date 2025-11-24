@@ -1,7 +1,7 @@
 {
   "_version": "1.48.0",
   "sap.app": {
-    "id": "project1",
+    "id": "project1_recruitment",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -42,6 +42,19 @@
           "odataVersion": "2.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "Requisition-display": {
+          "semanticObject": "Requisition",
+          "action": "display",
+          "title": "{{Requisition-display.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -67,7 +80,7 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.ui.layout": {},       
+        "sap.ui.layout": {},
         "sap.ushell": {},
         "sap.f": {},
         "sap.ui.comp": {},
