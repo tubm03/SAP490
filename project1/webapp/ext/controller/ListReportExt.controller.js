@@ -10,22 +10,16 @@ sap.ui.define([
     return {
         onInit: function () {
             console.log("✅ ListReportExt - onInit");
-            
-            // ✅ Gọi onAfterRendering sau khi UI render xong
             this.getView().attachAfterRendering(this._setupSelectionListener, this);
         },
 
-        // ✅ Setup listener cho selection change
         _setupSelectionListener: function () {
             const oView = this.getView();
-            
-            // Tìm table trong ListReport (có thể là ResponsiveTable hoặc Table)
             let oTable = oView.byId("Requisition");
             if (!oTable) {
                 oTable = oView.byId("ListReport-Requisition");
             }
             if (!oTable) {
-                // Tìm tất cả tables
                 const aTables = oView.findAggregatedObjects(true, (ctrl) => {
                     return ctrl.getMetadata && (
                         ctrl.getMetadata().getName().indexOf("Table") !== -1 ||
@@ -41,15 +35,12 @@ sap.ui.define([
                     this._bListenerAdded = true;
                     console.log("✅ Selection listener added to table:", oTable.getId());
                 }
-                
-                // ✅ Update button state ngay lần đầu
                 this._updateSendMailButtonState();
             } else if (!oTable) {
                 console.warn("⚠️ Table not found in view");
             }
         },
 
-        // ✅ Update trạng thái nút Send Mail
         _updateSendMailButtonState: function () {
             try {
                 let aContexts = [];
@@ -60,26 +51,21 @@ sap.ui.define([
                     return;
                 }
 
-                // ✅ Không có row được select
                 if (!aContexts || aContexts.length === 0) {
                     this._setSendMailButtonEnabled(false, "Please select a requisition");
                     return;
                 }
 
-                // ✅ Lấy dữ liệu từ row được chọn
                 const oContext = aContexts[0];
                 const oData = oContext.getProperty();
                 
                 console.log("📊 Selected data:", oData);
 
-                // ✅ Kiểm tra trạng thái từ field "Status"
                 const sStatus = oData.Status || "";
                 const sStatusText = oData.StatusText || "";
                 
                 console.log("📌 Current Status Code:", sStatus, "| Status Text:", sStatusText);
 
-                // ✅ Disable nút nếu status là "Reject" (Status Code = 3)
-                // Status mapping: 1=Active, 2=Inactive, 3=Reject, 4=Accept, 5=Done, 6=Hiring, 7=Pending
                 const bIsRejected = sStatus === 3 || 
                                    sStatus === "3" || 
                                    sStatusText.toUpperCase().includes("REJECT");
@@ -89,7 +75,6 @@ sap.ui.define([
                     return;
                 }
 
-                // ✅ Enable nút nếu status OK
                 this._setSendMailButtonEnabled(true, "");
 
             } catch (e) {
@@ -97,21 +82,16 @@ sap.ui.define([
             }
         },
 
-        // ✅ Set trạng thái button
         _setSendMailButtonEnabled: function (bEnabled, sTooltip) {
             try {
                 const oView = this.getView();
-                
-                // ✅ Tìm button bằng ID hoặc custom data
                 let oButton = null;
                 
-                // Cách 1: Tìm bằng data-action (nếu button có data attribute)
                 const $buttons = oView.$().find("[data-action='sendMailAction']");
                 if ($buttons.length > 0) {
                     oButton = sap.ui.getCore().byId($buttons.attr("id"));
                 }
                 
-                // Cách 2: Tìm button trong toolbar
                 if (!oButton) {
                     const oToolbar = oView.byId("CustomActions");
                     if (oToolbar && oToolbar.getContent) {
@@ -121,7 +101,6 @@ sap.ui.define([
                     }
                 }
                 
-                // Cách 3: Tìm tất cả buttons và lọc
                 if (!oButton) {
                     const aAllControls = oView.findAggregatedObjects(true, (ctrl) => {
                         return ctrl.getId && ctrl.getId().includes("sendMailAction");
@@ -146,7 +125,6 @@ sap.ui.define([
             }
         },
 
-        // ✅ Handler nút Send Mail
         beforeSendMail: async function () {
             console.log("🟢 beforeSendMail called");
 
@@ -165,12 +143,10 @@ sap.ui.define([
             const oContext = aContexts[0];
             this._oCurrentContext = oContext;
 
-            // ✅ Double-check trạng thái trước khi gửi
             const oData = oContext.getProperty();
             const sStatus = oData.Status || "";
             const sStatusText = oData.StatusText || "";
             
-            // Status Code 3 = Reject
             const bIsRejected = sStatus === 3 || 
                                sStatus === "3" || 
                                sStatusText.toUpperCase().includes("REJECT");
@@ -180,7 +156,6 @@ sap.ui.define([
                 return;
             }
 
-            // ✅ Read full data from backend
             const oFullData = await this._readFullDataFromBackend(oContext);
 
             if (!oFullData) {
@@ -196,19 +171,7 @@ sap.ui.define([
             const sEmail = oFullData.EmailAddress || "";
             const sDepartment = oFullData.OrgUnitText || "";
 
-            const sEmailContent = `Dear ${sFullName},
-
-Thank you for taking the time to participate in our recruitment process at E-Tech Company.
-
-We are pleased to inform you that you have been selected for the position of ${sPosition}.
-
-Your expected start date is ../../...., and more details will be shared shortly.
-
-We will send your official Offer Letter to this email address soon.
-
-Best regards,
-HR Department
-E-Tech Company`;
+            const sEmailContentPlainText = this._generatePlainTextEmailTemplate(sFullName, sPosition);
 
             const oDialogData = {
                 ReqId: sReqId,
@@ -216,14 +179,311 @@ E-Tech Company`;
                 Position: sPosition,
                 Email: sEmail,
                 Department: sDepartment,
-                Subject: "Job Offer Notification – E-Tech Company",
-                EmailContent: sEmailContent
+                Subject: "Job Offer Letter – Tech E Company",
+                EmailContent: sEmailContentPlainText
             };
 
             this._openSendMailDialog(oDialogData);
         },
 
-        // ✅ Read full data from backend
+        // ✅ Generate Plain Text Email Template - Hiển thị trên màn hình
+        _generatePlainTextEmailTemplate: function(sFullName, sPosition) {
+            return `Dear Mr/Ms ${sFullName},
+
+Thank you for your interest in our recruitment and for applying to Tech E. We highly appreciate the knowledge and enthusiasm you demonstrated during the interview process. Therefore, Tech E is pleased to formally extend an offer of employment with the following details:
+
+- Position: ${sPosition}
+- Work Location: .........
+- Start Date: .........
+- Probation Period: ......... - .........
+
+Details regarding the position, responsibilities, and benefits are outlined in the Job Offer Letter (attached file).
+
+Before your start date, please complete the "Employee Information Form" (attached file) and submit it via this email thread (before the evening of your start date). On your first day, please bring your ID card for building check-in, your personal laptop (You will be provided with a company laptop following company procedures as soon as possible), and required HR documents (attached file).
+
+If you have any questions regarding this information, please contact: ......... (Phone: .........)
+
+We are very proud to welcome a dedicated and talented team member to our organization. Tech E looks forward to receiving your confirmation soon. Let's get ready to achieve our goals together!
+
+Best regards,
+
+---
+
+TECH E COMPANY
+Address: .........
+
+Email: .........
+Hotline: .........`;
+        },
+
+        // ✅ Convert Plain Text to HTML - Khi gửi (VTVlive Style Format)
+        _convertPlainTextToHTML: function(sPlainText) {
+            // Escape HTML characters
+            let sHTML = sPlainText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+            // Convert line breaks
+            sHTML = sHTML.replace(/\n/g, "<br>");
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Offer Letter - Tech E</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .email-container { 
+            max-width: 650px; 
+            margin: 20px auto; 
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Header với gradient xanh dương đậm */
+        .header { 
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 40px 30px;
+            text-align: left;
+            color: #ffffff;
+            position: relative;
+        }
+        .header-logo {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .header-subtitle {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.95;
+            text-align: right;
+            margin-top: -25px;
+        }
+        
+        /* Content area */
+        .content { 
+            padding: 35px 30px;
+            background-color: #ffffff;
+        }
+        
+        /* Title section với style italic màu xanh */
+        .title-section {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 32px;
+            color: #1e3a8a;
+            font-style: italic;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        /* Greeting */
+        .greeting {
+            color: #000000;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        /* Paragraph text */
+        .text-content {
+            color: #333333;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+        
+        /* Job details list */
+        .job-details {
+            margin: 25px 0;
+            padding-left: 20px;
+        }
+        .job-details li {
+            color: #333333;
+            font-size: 14px;
+            line-height: 1.9;
+            margin-bottom: 8px;
+            list-style: none;
+            position: relative;
+            padding-left: 10px;
+        }
+        .job-details li:before {
+            content: "-";
+            position: absolute;
+            left: -10px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        /* Highlight text */
+        .highlight {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        
+        /* Decoration với text "Best regards!" */
+        .decoration {
+            text-align: right;
+            margin: 30px 0 20px 0;
+            position: relative;
+        }
+        .decoration-text {
+            color: #ea580c;
+            font-size: 20px;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        /* Footer với gradient xanh dương đậm */
+        .footer {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 30px;
+            color: #ffffff;
+            text-align: center;
+        }
+        .footer-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .footer-address {
+            font-size: 11px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            opacity: 0.95;
+        }
+        .footer-contact {
+            font-size: 11px;
+            margin-top: 8px;
+        }
+        .footer-contact span {
+            margin: 0 10px;
+        }
+        
+        /* Signature */
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .signature-line {
+            color: #333333;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">Tech E</div>
+            <div class="header-subtitle">HUMAN RESOURCES<br>DEPARTMENT</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title-section">Job Offer Letter</h1>
+            
+            ${this._formatEmailContentHTML(sHTML)}
+            
+            <!-- Decoration -->
+            <div class="decoration">
+                <span class="decoration-text">Best regards!</span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-title">TECH E COMPANY</div>
+            
+        </div>
+    </div>
+</body>
+</html>`;
+        },
+
+        // ✅ Format email content với style VTVlive
+        _formatEmailContentHTML: function(sContent) {
+            const lines = sContent.split("<br>");
+            let result = [];
+            let inJobDetails = false;
+
+            lines.forEach((line) => {
+                const text = line.trim();
+                
+                if (!text || text === "---") {
+                    return;
+                }
+
+                // Greeting: "Dear Mr/Ms..."
+                if (text.startsWith("Dear")) {
+                    result.push(`<p class="greeting">${text}</p>`);
+                }
+                // Job details list (bắt đầu với dấu -)
+                else if (text.startsWith("-")) {
+                    if (!inJobDetails) {
+                        result.push(`<ul class="job-details">`);
+                        inJobDetails = true;
+                    }
+                    const cleanText = text.substring(1).trim();
+                    result.push(`<li>${cleanText}</li>`);
+                }
+                // End job details list
+                else if (inJobDetails && !text.startsWith("-")) {
+                    result.push(`</ul>`);
+                    inJobDetails = false;
+                    result.push(`<p class="text-content">${text}</p>`);
+                }
+                // Contact info (có Phone/Contact)
+                else if (text.includes("contact:") || text.includes("Phone:") || text.includes("questions")) {
+                    result.push(`<p class="text-content highlight">${text}</p>`);
+                }
+                // Footer company info
+                else if (text.includes("TECH E COMPANY") || text.includes("Address:") || 
+                         text.includes("Email:") || text.includes("Hotline:")) {
+                    if (!result[result.length - 1]?.includes("signature")) {
+                        result.push(`<div class="signature">`);
+                    }
+                    result.push(`<p class="signature-line">${text}</p>`);
+                }
+                // Best regards
+                else if (text.includes("Best regards")) {
+                    result.push(`<p class="text-content" style="margin-top: 25px;">${text}</p>`);
+                }
+                // Regular content
+                else {
+                    result.push(`<p class="text-content">${text}</p>`);
+                }
+            });
+
+            // Close any open tags
+            if (inJobDetails) {
+                result.push(`</ul>`);
+            }
+            if (result[result.length - 1]?.includes("signature-line")) {
+                result.push(`</div>`);
+            }
+
+            return result.join("\n");
+        },
+
         _readFullDataFromBackend: function (oContext) {
             const oController = this;
             
@@ -250,7 +510,6 @@ E-Tech Company`;
             });
         },
 
-        // ✅ Open send mail dialog
         _openSendMailDialog: async function (oData) {
             const oView = this.getView();
             const oController = this;
@@ -288,7 +547,6 @@ E-Tech Company`;
             }
         },
 
-        // ✅ Handle send email confirm
         onSendEmailConfirm: async function () {
             const oView = this.getView();
             const oController = this;
@@ -343,13 +601,13 @@ E-Tech Company`;
                 title: "Confirm Send",
                 onClose: function (oAction) {
                     if (oAction === MessageBox.Action.OK) {
-                        oController._sendEmailViaFM(sEmail, sSubject, sContent, sFileName, sFileBase64);
+                        const sHTMLContent = oController._convertPlainTextToHTML(sContent);
+                        oController._sendEmailViaFM(sEmail, sSubject, sHTMLContent, sFileName, sFileBase64);
                     }
                 }
             });
         },
 
-        // ✅ Convert file to Base64
         _readFileAsBase64: function (file) {
             return new Promise(function (resolve, reject) {
                 try {
@@ -377,7 +635,6 @@ E-Tech Company`;
             });
         },
 
-        // ✅ SEND EMAIL VIA ODATA ACTION
         _sendEmailViaFM: function (sEmail, sSubject, sContent, sFileName, sFileBase64) {
             BusyIndicator.show(0);
 
@@ -428,7 +685,6 @@ E-Tech Company`;
                                         oController.extensionAPI.refresh();
                                     }
 
-                                    // ✅ Update button state sau khi refresh
                                     oController._updateSendMailButtonState();
                                 } else {
                                     MessageBox.error("❌ No response from server");
@@ -468,13 +724,11 @@ E-Tech Company`;
             }
         },
 
-        // ✅ Validate email
         _isValidEmail: function (sEmail) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(sEmail);
         },
 
-        // ✅ Cancel send mail dialog
         onCancelSendMail: function () {
             if (this._pSendMailDialog) {
                 this._pSendMailDialog.then(function (dlg) {
