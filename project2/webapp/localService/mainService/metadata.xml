@@ -52,6 +52,13 @@
                 <Property Name="CommentCode" Type="Edm.String" Nullable="false" MaxLength="10"/>
                 <Property Name="CommentText" Type="Edm.String" Nullable="false" MaxLength="1000"/>
             </EntityType>
+            <EntityType Name="ZI_REJECT_COMMENTType">
+                <Key>
+                    <PropertyRef Name="CommentCode"/>
+                </Key>
+                <Property Name="CommentCode" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="CommentText" Type="Edm.String" Nullable="false" MaxLength="1000"/>
+            </EntityType>
             <EntityType Name="Z4C_APPR_ATTACHType">
                 <Key>
                     <PropertyRef Name="ReqId"/>
@@ -64,9 +71,11 @@
                 <Property Name="FileName" Type="Edm.String" Nullable="false" MaxLength="100"/>
                 <Property Name="MimeType" Type="Edm.String" Nullable="false" MaxLength="255"/>
                 <Property Name="FileContent" Type="Edm.Binary" Nullable="false"/>
-                <Property Name="FileSize" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="FileSize" Type="Edm.Int64" Nullable="false"/>
                 <Property Name="CreatedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="CreatedAt" Type="Edm.Date"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="__OperationControl" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.Z4C_APPR_ATTACHOperationControl"/>
+                <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd.z_ui_manage_req.v0001.SAP__Message)" Nullable="false"/>
                 <NavigationProperty Name="_Requisition" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false" Partner="_Attachments">
                     <ReferentialConstraint Property="ReqId" ReferencedProperty="ReqId"/>
                     <ReferentialConstraint Property="ApplicantId" ReferencedProperty="ApplicantId"/>
@@ -89,15 +98,19 @@
                 <Property Name="DesiredSalary" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="variable"/>
                 <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5"/>
                 <Property Name="Reason" Type="Edm.String" Nullable="false" MaxLength="255"/>
-                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="StatusDisplay" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="StatusCriticality" Type="Edm.Byte" Nullable="false"/>
                 <Property Name="CreatedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="CreatedAt" Type="Edm.Date"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7"/>
                 <Property Name="ChangedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="ChangedAt" Type="Edm.Date"/>
                 <Property Name="OrgUnitId" Type="Edm.String" Nullable="false" MaxLength="45"/>
                 <Property Name="OrgUnitText" Type="Edm.String" Nullable="false" MaxLength="40"/>
                 <Property Name="PositionId" Type="Edm.String" Nullable="false" MaxLength="45"/>
                 <Property Name="PositionText" Type="Edm.String" Nullable="false" MaxLength="40"/>
+                <Property Name="MinSalary" Type="Edm.Decimal" Nullable="false" Precision="15"/>
+                <Property Name="MaxSalary" Type="Edm.Decimal" Nullable="false" Precision="15"/>
+                <Property Name="us_name" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="rep_name" Type="Edm.String" Nullable="false" MaxLength="12"/>
                 <Property Name="__OperationControl" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQOperationControl"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd.z_ui_manage_req.v0001.SAP__Message)" Nullable="false"/>
                 <NavigationProperty Name="_Attachments" Type="Collection(com.sap.gateway.srvd.z_ui_manage_req.v0001.Z4C_APPR_ATTACHType)" Partner="_Requisition">
@@ -112,23 +125,28 @@
                     <PropertyRef Name="ReqId"/>
                     <PropertyRef Name="ApplicantId"/>
                     <PropertyRef Name="LogSeqNo"/>
-                    <PropertyRef Name="ApprBy"/>
                 </Key>
                 <Property Name="ReqId" Type="Edm.String" Nullable="false" MaxLength="8"/>
                 <Property Name="ApplicantId" Type="Edm.String" Nullable="false" MaxLength="8"/>
                 <Property Name="LogSeqNo" Type="Edm.Byte" Nullable="false"/>
                 <Property Name="ApprBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="Action" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="LogComment" Type="Edm.String" Nullable="false"/>
-                <Property Name="LogTimestamp" Type="Edm.Date"/>
+                <Property Name="ActionDisplay" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="StatusCriticalityAction" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="LogComment" Type="Edm.String" Nullable="false" MaxLength="255"/>
+                <Property Name="LogTimestamp" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="Approve_Account" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="appr_acc" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="rep_acc" Type="Edm.String" Nullable="false" MaxLength="12"/>
                 <NavigationProperty Name="_Requisition" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false" Partner="_HistoryLog">
                     <ReferentialConstraint Property="ReqId" ReferencedProperty="ReqId"/>
                     <ReferentialConstraint Property="ApplicantId" ReferencedProperty="ApplicantId"/>
                 </NavigationProperty>
             </EntityType>
+            <ComplexType Name="Z4C_APPR_ATTACHOperationControl">
+                <Property Name="DownloadFile" Type="Edm.Boolean" Nullable="false"/>
+            </ComplexType>
             <ComplexType Name="ZC_MANAGE_REQOperationControl">
                 <Property Name="Accept" Type="Edm.Boolean" Nullable="false"/>
-                <Property Name="Delegate" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="Print" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="Reject" Type="Edm.Boolean" Nullable="false"/>
             </ComplexType>
@@ -136,6 +154,15 @@
                 <Property Name="FileName" Type="Edm.String" Nullable="false" MaxLength="255"/>
                 <Property Name="MimeType" Type="Edm.String" Nullable="false" MaxLength="128"/>
                 <Property Name="pdfContent" Type="Edm.String" Nullable="false"/>
+            </ComplexType>
+            <ComplexType Name="ZA_DOWNLOAD_RESULT">
+                <Property Name="ApplicantId" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="AttachId" Type="Edm.String" Nullable="false" MaxLength="10"/>
+                <Property Name="FileContent" Type="Edm.String" Nullable="false"/>
+                <Property Name="FileName" Type="Edm.String" Nullable="false" MaxLength="255"/>
+                <Property Name="FileSize" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="MimeType" Type="Edm.String" Nullable="false" MaxLength="100"/>
+                <Property Name="ReqId" Type="Edm.String" Nullable="false" MaxLength="10"/>
             </ComplexType>
             <ComplexType Name="SAP__Message">
                 <Property Name="code" Type="Edm.String" Nullable="false"/>
@@ -151,11 +178,9 @@
                 <Parameter Name="CommentParam" Type="Edm.String" Nullable="false" MaxLength="1000"/>
                 <ReturnType Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false"/>
             </Action>
-            <Action Name="Delegate" EntitySetPath="_it" IsBound="true">
-                <Parameter Name="_it" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false"/>
-                <Parameter Name="delegate_to" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Parameter Name="Reason_delegate" Type="Edm.String" Nullable="false" MaxLength="255"/>
-                <ReturnType Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false"/>
+            <Action Name="DownloadFile" IsBound="true">
+                <Parameter Name="_it" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.Z4C_APPR_ATTACHType" Nullable="false"/>
+                <ReturnType Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZA_DOWNLOAD_RESULT" Nullable="false"/>
             </Action>
             <Action Name="Reject" EntitySetPath="_it" IsBound="true">
                 <Parameter Name="_it" Type="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType" Nullable="false"/>
@@ -178,6 +203,7 @@
                     <NavigationPropertyBinding Path="_HistoryLog" Target="Z4C_APPR_LOG"/>
                 </EntitySet>
                 <EntitySet Name="ZI_ACCEPT_COMMENT" EntityType="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZI_ACCEPT_COMMENTType"/>
+                <EntitySet Name="ZI_REJECT_COMMENT" EntityType="com.sap.gateway.srvd.z_ui_manage_req.v0001.ZI_REJECT_COMMENTType"/>
             </EntityContainer>
             <Annotations Target="SAP__self.ZI_ACCEPT_COMMENTType">
                 <Annotation Term="SAP__common.Label" String="Accept Comments Value Help"/>
@@ -187,6 +213,39 @@
                     <Record>
                         <PropertyValue Property="Searchable" Bool="true"/>
                         <PropertyValue Property="UnsupportedExpressions" EnumMember="SAP__capabilities.SearchExpressions/AND SAP__capabilities.SearchExpressions/OR SAP__capabilities.SearchExpressions/NOT SAP__capabilities.SearchExpressions/group SAP__capabilities.SearchExpressions/phrase"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.ZI_REJECT_COMMENTType">
+                <Annotation Term="SAP__common.Label" String="Reject Comments Value Help"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/ZI_REJECT_COMMENT">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
                     </Record>
                 </Annotation>
                 <Annotation Term="SAP__capabilities.InsertRestrictions">
@@ -231,14 +290,15 @@
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="FILE NAME"/>
             </Annotations>
-            <Annotations Target="SAP__self.Z4C_APPR_ATTACHType/FileSize">
-                <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="size"/>
-            </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_ATTACHType/CreatedBy">
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Created By"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Name of Person Responsible for Creating the Object"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_ATTACHType/__OperationControl">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__UI.HiddenFilter"/>
+                <Annotation Term="SAP__UI.Hidden"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Z4C_APPR_ATTACH">
                 <Annotation Term="SAP__capabilities.NavigationRestrictions">
@@ -273,6 +333,11 @@
                                 </Record>
                             </Collection>
                         </PropertyValue>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>__OperationControl</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
                     </Record>
                 </Annotation>
                 <Annotation Term="SAP__capabilities.SortRestrictions">
@@ -280,6 +345,7 @@
                         <PropertyValue Property="NonSortableProperties">
                             <Collection>
                                 <PropertyPath>MimeType</PropertyPath>
+                                <PropertyPath>__OperationControl</PropertyPath>
                             </Collection>
                         </PropertyValue>
                     </Record>
@@ -307,6 +373,9 @@
                 <Annotation Term="SAP__core.OptimisticConcurrency">
                     <Collection/>
                 </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.DownloadFile(SAP__self.Z4C_APPR_ATTACHType)">
+                <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/DownloadFile"/>
             </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_ATTACHType">
                 <Annotation Term="SAP__common.Label" String="Projection view for table file attach"/>
@@ -367,14 +436,26 @@
                             <PropertyValue Property="Value" Path="FileSize"/>
                             <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/Low"/>
                         </Record>
+                        <Record Type="SAP__UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Download"/>
+                            <PropertyValue Property="Action" String="com.sap.gateway.srvd.z_ui_manage_req.v0001.DownloadFile(com.sap.gateway.srvd.z_ui_manage_req.v0001.Z4C_APPR_ATTACHType)"/>
+                            <PropertyValue Property="InvocationGrouping" EnumMember="SAP__UI.OperationGroupingType/Isolated"/>
+                        </Record>
                     </Collection>
                 </Annotation>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/ReqId">
+                <Annotation Term="SAP__common.Label" String="Requisition ID"/>
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsDigitSequence"/>
-                <Annotation Term="SAP__common.Label" String="Object ID"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_requisition/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.reqid'/$metadata</String>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="SAP__common.Heading" String="ObjectID"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Object ID"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/ApplicantId">
                 <Annotation Term="SAP__core.Computed"/>
@@ -393,6 +474,11 @@
                 </Annotation>
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_pers_area/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.persarea'/$metadata</String>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="SAP__common.Label" String="Personnel area"/>
                 <Annotation Term="SAP__common.Heading" String="PA"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Personnel Area"/>
@@ -404,20 +490,22 @@
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/BasicSalary">
                 <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__measures.ISOCurrency" Path="Currency"/>
                 <Annotation Term="SAP__common.Label" String="Basic Salary"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Basic Salay"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/BonusSalary">
                 <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__measures.ISOCurrency" Path="Currency"/>
                 <Annotation Term="SAP__common.Label" String="Bonus Salary"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/DesiredSalary">
                 <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__measures.ISOCurrency" Path="Currency"/>
                 <Annotation Term="SAP__common.Label" String="Desired Salary"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/Currency">
                 <Annotation Term="SAP__common.IsCurrency"/>
-                <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Currency"/>
                 <Annotation Term="SAP__common.Heading" String="Crcy"/>
@@ -427,52 +515,84 @@
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.Label" String="Recruitment Reason"/>
             </Annotations>
-            <Annotations Target="SAP__self.ZC_MANAGE_REQType/Status">
-                <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Approval Status"/>
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType/StatusDisplay">
+                <Annotation Term="SAP__common.Label" String="Status"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_status_rep/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.statusdisplay'/$metadata</String>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__common.ValueListWithFixedValues"/>
+                <Annotation Term="SAP__common.Heading" String="Person Performing Action"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Person Performing Action"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/CreatedBy">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_requisition/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.createdby'/$metadata</String>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="SAP__common.Label" String="Created By"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Name of Person Responsible for Creating the Object"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/CreatedAt">
                 <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Created On"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Record Created On"/>
+                <Annotation Term="SAP__common.Label" String="Created At"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/ChangedBy">
-                <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Changed By"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Name of Person Who Changed Object"/>
             </Annotations>
-            <Annotations Target="SAP__self.ZC_MANAGE_REQType/ChangedAt">
-                <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Changed On"/>
-                <Annotation Term="SAP__common.Heading" String="Chngd On"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Last Changed On"/>
-            </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/OrgUnitId">
+                <Annotation Term="SAP__common.Label" String="Organizational Unit"/>
                 <Annotation Term="SAP__common.Text" Path="OrgUnitText">
                     <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextLast"/>
                 </Annotation>
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="ID rel.object"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_orgunit/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.orgunitid'/$metadata</String>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="SAP__common.Heading" String="ID of related object"/>
                 <Annotation Term="SAP__common.QuickInfo" String="ID of Related Object"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/PositionId">
+                <Annotation Term="SAP__common.Label" String="Position"/>
                 <Annotation Term="SAP__common.Text" Path="PositionText">
                     <Annotation Term="SAP__UI.TextArrangement" EnumMember="SAP__UI.TextArrangementType/TextLast"/>
                 </Annotation>
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="ID rel.object"/>
+                <Annotation Term="SAP__common.ValueListReferences">
+                    <Collection>
+                        <String>../../../../srvd_f4/sap/z4i_sh_possitionhrp1001/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.et-zc_manage_req.positionid'/$metadata</String>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="SAP__common.Heading" String="ID of related object"/>
                 <Annotation Term="SAP__common.QuickInfo" String="ID of Related Object"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType/MinSalary">
+                <Annotation Term="SAP__measures.ISOCurrency" Path="Currency"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType/MaxSalary">
+                <Annotation Term="SAP__measures.ISOCurrency" Path="Currency"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType/us_name">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User"/>
+                <Annotation Term="SAP__common.Heading" String="User Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="User Name in User Master Record"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZC_MANAGE_REQType/rep_name">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User"/>
+                <Annotation Term="SAP__common.Heading" String="User Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="User Name in User Master Record"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/__OperationControl">
                 <Annotation Term="SAP__core.Computed"/>
@@ -514,6 +634,15 @@
                 </Annotation>
                 <Annotation Term="SAP__capabilities.FilterRestrictions">
                     <Record>
+                        <PropertyValue Property="Filterable" Bool="true"/>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="CreatedAt"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
                         <PropertyValue Property="NonFilterableProperties">
                             <Collection>
                                 <PropertyPath>__OperationControl</PropertyPath>
@@ -559,9 +688,7 @@
             </Annotations>
             <Annotations Target="SAP__self.Accept(SAP__self.ZC_MANAGE_REQType)/CommentParam">
                 <Annotation Term="SAP__common.Label" String="Enter Your Comment"/>
-                <Annotation Term="SAP__common.ValueListForValidation" String=""/>
                 <Annotation Term="SAP__common.ValueListReferences">
-        
                     <Collection>
                         <String>../../../../srvd_f4/sap/zi_accept_comment/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.ae-zc_manage_req.accept.commentparam.ZC_MANAGE_REQType'/$metadata</String>
                     </Collection>
@@ -570,22 +697,11 @@
             <Annotations Target="SAP__self.Accept(SAP__self.ZC_MANAGE_REQType)">
                 <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/Accept"/>
             </Annotations>
-            <Annotations Target="SAP__self.Delegate(SAP__self.ZC_MANAGE_REQType)/delegate_to">
-                <Annotation Term="SAP__common.Label" String="Delegate To User"/>
-            </Annotations>
-            <Annotations Target="SAP__self.Delegate(SAP__self.ZC_MANAGE_REQType)/Reason_delegate">
-                <Annotation Term="SAP__common.Label" String="Comment"/>
-            </Annotations>
-            <Annotations Target="SAP__self.Delegate(SAP__self.ZC_MANAGE_REQType)">
-                <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/Delegate"/>
-            </Annotations>
             <Annotations Target="SAP__self.Reject(SAP__self.ZC_MANAGE_REQType)/CommentParam">
-                <Annotation Term="SAP__common.Label" String="Enter Your Comment"/>
-                <Annotation Term="SAP__common.ValueListForValidation" String=""/>
+                <Annotation Term="SAP__common.Label" String="Enter your comment"/>
                 <Annotation Term="SAP__common.ValueListReferences">
-                
                     <Collection>
-                        <String>../../../../srvd_f4/sap/zi_accept_comment/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.ae-zc_manage_req.reject.commentparam.ZC_MANAGE_REQType'/$metadata</String>
+                        <String>../../../../srvd_f4/sap/zi_reject_comment/0001;ps='srvd-z_ui_manage_req-0001';va='com.sap.gateway.srvd.z_ui_manage_req.v0001.ae-zc_manage_req.reject.commentparam.ZC_MANAGE_REQType'/$metadata</String>
                     </Collection>
                 </Annotation>
             </Annotations>
@@ -596,7 +712,7 @@
                 <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/Print"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType">
-                <Annotation Term="SAP__common.Label" String="Consumption requisition for manage requisition screen"/>
+                <Annotation Term="SAP__common.Label" String="Consumption  requisition screen"/>
                 <Annotation Term="SAP__UI.Facets">
                     <Collection>
                         <Record Type="SAP__UI.CollectionFacet">
@@ -605,7 +721,19 @@
                             <PropertyValue Property="Facets">
                                 <Collection>
                                     <Record Type="SAP__UI.ReferenceFacet">
-                                        <PropertyValue Property="Target" AnnotationPath="@SAP__UI.FieldGroup#GeneralInfo"/>
+                                        <PropertyValue Property="Label" String="Applicant &amp; Requisition Details"/>
+                                        <PropertyValue Property="ID" String="ApplicantInfoSection"/>
+                                        <PropertyValue Property="Target" AnnotationPath="@SAP__UI.FieldGroup#ApplicantInfo"/>
+                                    </Record>
+                                    <Record Type="SAP__UI.ReferenceFacet">
+                                        <PropertyValue Property="Label" String="Position &amp; Compensation"/>
+                                        <PropertyValue Property="ID" String="PositionInfoSection"/>
+                                        <PropertyValue Property="Target" AnnotationPath="@SAP__UI.FieldGroup#PositionInfo"/>
+                                    </Record>
+                                    <Record Type="SAP__UI.ReferenceFacet">
+                                        <PropertyValue Property="Label" String="Reason for Requisition"/>
+                                        <PropertyValue Property="ID" String="ReasonSection"/>
+                                        <PropertyValue Property="Target" AnnotationPath="@SAP__UI.FieldGroup#ReasonInfor"/>
                                     </Record>
                                 </Collection>
                             </PropertyValue>
@@ -622,25 +750,20 @@
                         </Record>
                     </Collection>
                 </Annotation>
-                <Annotation Term="SAP__UI.FieldGroup" Qualifier="GeneralInfo">
+                <Annotation Term="SAP__UI.FieldGroup" Qualifier="ApplicantInfo">
                     <Record>
                         <PropertyValue Property="Data">
                             <Collection>
                                 <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Requisition ID"/>
+                                    <PropertyValue Property="Value" Path="ReqId"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Value" Path="ApplicantId"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
                                     <PropertyValue Property="Label" String="Full Name Applicant"/>
                                     <PropertyValue Property="Value" Path="fullName"/>
-                                </Record>
-                                <Record Type="SAP__UI.DataField">
-                                    <PropertyValue Property="Label" String="Personnel Area"/>
-                                    <PropertyValue Property="Value" Path="PersArea"/>
-                                </Record>
-                                <Record Type="SAP__UI.DataField">
-                                    <PropertyValue Property="Label" String="Org Unit"/>
-                                    <PropertyValue Property="Value" Path="OrgUnitId"/>
-                                </Record>
-                                <Record Type="SAP__UI.DataField">
-                                    <PropertyValue Property="Label" String="Possition"/>
-                                    <PropertyValue Property="Value" Path="PositionId"/>
                                 </Record>
                                 <Record Type="SAP__UI.DataField">
                                     <PropertyValue Property="Label" String="Phone"/>
@@ -649,6 +772,34 @@
                                 <Record Type="SAP__UI.DataField">
                                     <PropertyValue Property="Label" String="Email"/>
                                     <PropertyValue Property="Value" Path="EmailAddress"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__UI.FieldGroup" Qualifier="PositionInfo">
+                    <Record>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Possition"/>
+                                    <PropertyValue Property="Value" Path="PositionId"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Salary Range Min"/>
+                                    <PropertyValue Property="Value" Path="MinSalary"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Salary Range Max"/>
+                                    <PropertyValue Property="Value" Path="MaxSalary"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Personnel Area"/>
+                                    <PropertyValue Property="Value" Path="PersArea"/>
+                                </Record>
+                                <Record Type="SAP__UI.DataField">
+                                    <PropertyValue Property="Label" String="Organizational Uni"/>
+                                    <PropertyValue Property="Value" Path="OrgUnitId"/>
                                 </Record>
                                 <Record Type="SAP__UI.DataField">
                                     <PropertyValue Property="Label" String=" Basic Salary"/>
@@ -666,6 +817,14 @@
                                     <PropertyValue Property="Label" String=" Currency"/>
                                     <PropertyValue Property="Value" Path="Currency"/>
                                 </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__UI.FieldGroup" Qualifier="ReasonInfor">
+                    <Record>
+                        <PropertyValue Property="Data">
+                            <Collection>
                                 <Record Type="SAP__UI.DataField">
                                     <PropertyValue Property="Label" String="Reason"/>
                                     <PropertyValue Property="Value" Path="Reason"/>
@@ -715,16 +874,17 @@
                             <PropertyValue Property="Value" Path="PersArea"/>
                         </Record>
                         <Record Type="SAP__UI.DataField">
-                            <PropertyValue Property="Label" String="Position"/>
-                            <PropertyValue Property="Value" Path="PositionId"/>
-                        </Record>
-                        <Record Type="SAP__UI.DataField">
                             <PropertyValue Property="Label" String="Organizational Unit"/>
                             <PropertyValue Property="Value" Path="OrgUnitId"/>
                         </Record>
                         <Record Type="SAP__UI.DataField">
+                            <PropertyValue Property="Label" String="Position"/>
+                            <PropertyValue Property="Value" Path="PositionId"/>
+                        </Record>
+                        <Record Type="SAP__UI.DataField">
                             <PropertyValue Property="Label" String="Status"/>
-                            <PropertyValue Property="Value" Path="Status"/>
+                            <PropertyValue Property="Criticality" Path="StatusCriticality"/>
+                            <PropertyValue Property="Value" Path="StatusDisplay"/>
                         </Record>
                         <Record Type="SAP__UI.DataField">
                             <PropertyValue Property="Label" String="Create By"/>
@@ -734,19 +894,32 @@
                             <PropertyValue Property="Label" String="Create Date"/>
                             <PropertyValue Property="Value" Path="CreatedAt"/>
                         </Record>
-                        <Record Type="SAP__UI.DataFieldForAction">
-                            <PropertyValue Property="Label" String="Delegate"/>
-                            <PropertyValue Property="Action" String="com.sap.gateway.srvd.z_ui_manage_req.v0001.Delegate(com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType)"/>
-                            <PropertyValue Property="InvocationGrouping" EnumMember="SAP__UI.OperationGroupingType/Isolated"/>
-                        </Record>
                     </Collection>
+                </Annotation>
+                <Annotation Term="SAP__UI.PresentationVariant">
+                    <Record>
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="SAP__common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="ReqId"/>
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@SAP__UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
                 </Annotation>
                 <Annotation Term="SAP__UI.SelectionFields">
                     <Collection>
+                        <PropertyPath>ReqId</PropertyPath>
                         <PropertyPath>PersArea</PropertyPath>
                         <PropertyPath>OrgUnitId</PropertyPath>
                         <PropertyPath>PositionId</PropertyPath>
-                        <PropertyPath>Status</PropertyPath>
+                        <PropertyPath>StatusDisplay</PropertyPath>
                         <PropertyPath>CreatedBy</PropertyPath>
                         <PropertyPath>CreatedAt</PropertyPath>
                     </Collection>
@@ -823,7 +996,6 @@
             <Annotations Target="SAP__self.Z4C_APPR_LOGType/ApplicantId">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsDigitSequence"/>
-                <Annotation Term="SAP__UI.Hidden"/>
                 <Annotation Term="SAP__common.Label" String="Applicant number"/>
                 <Annotation Term="SAP__common.Heading" String="App.no."/>
             </Annotations>
@@ -839,12 +1011,6 @@
                 <Annotation Term="SAP__common.Label" String="Created By"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Name of Person Responsible for Creating the Object"/>
             </Annotations>
-            <Annotations Target="SAP__self.Z4C_APPR_LOGType/Action">
-                <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Perf. Action"/>
-                <Annotation Term="SAP__common.Heading" String="Person Performing Action"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Person Performing Action"/>
-            </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_LOGType/LogComment">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__UI.MultiLineText"/>
@@ -853,8 +1019,25 @@
             </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_LOGType/LogTimestamp">
                 <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Created On"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Record Created On"/>
+                <Annotation Term="SAP__common.Label" String="Changed At"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_LOGType/Approve_Account">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User"/>
+                <Annotation Term="SAP__common.Heading" String="User Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="User Name in User Master Record"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_LOGType/appr_acc">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User"/>
+                <Annotation Term="SAP__common.Heading" String="User Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="User Name in User Master Record"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_LOGType/rep_acc">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="User"/>
+                <Annotation Term="SAP__common.Heading" String="User Name"/>
+                <Annotation Term="SAP__common.QuickInfo" String="User Name in User Master Record"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Z4C_APPR_LOG">
                 <Annotation Term="SAP__capabilities.NavigationRestrictions">
@@ -876,28 +1059,6 @@
                 <Annotation Term="SAP__capabilities.SearchRestrictions">
                     <Record>
                         <PropertyValue Property="Searchable" Bool="false"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__capabilities.FilterRestrictions">
-                    <Record>
-                        <PropertyValue Property="Filterable" Bool="true"/>
-                        <PropertyValue Property="FilterExpressionRestrictions">
-                            <Collection>
-                                <Record>
-                                    <PropertyValue Property="Property" PropertyPath="LogComment"/>
-                                    <PropertyValue Property="AllowedExpressions" String="SearchExpression"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="SAP__capabilities.SortRestrictions">
-                    <Record>
-                        <PropertyValue Property="NonSortableProperties">
-                            <Collection>
-                                <PropertyPath>LogComment</PropertyPath>
-                            </Collection>
-                        </PropertyValue>
                     </Record>
                 </Annotation>
                 <Annotation Term="SAP__capabilities.InsertRestrictions">
@@ -923,6 +1084,30 @@
                 <Annotation Term="SAP__core.OptimisticConcurrency">
                     <Collection/>
                 </Annotation>
+                <Annotation Term="SAP__capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="ApprBy"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="Approve_Account"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="appr_acc"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="rep_acc"/>
+                                    <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
             </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_LOGType">
                 <Annotation Term="SAP__common.Label" String="Projection view for table history log"/>
@@ -940,7 +1125,8 @@
                         </Record>
                         <Record Type="SAP__UI.DataField">
                             <PropertyValue Property="Label" String="Action"/>
-                            <PropertyValue Property="Value" Path="Action"/>
+                            <PropertyValue Property="Criticality" Path="StatusCriticalityAction"/>
+                            <PropertyValue Property="Value" Path="ActionDisplay"/>
                             <Annotation Term="SAP__UI.Importance" EnumMember="SAP__UI.ImportanceType/High"/>
                         </Record>
                         <Record Type="SAP__UI.DataField">
@@ -981,9 +1167,17 @@
                 <Annotation Term="SAP__UI.Hidden"/>
                 <Annotation Term="SAP__common.Label" String="File Content"/>
             </Annotations>
+            <Annotations Target="SAP__self.ZI_ACCEPT_COMMENTType/CommentCode">
+                <Annotation Term="SAP__UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZI_REJECT_COMMENTType/CommentCode">
+                <Annotation Term="SAP__UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_ATTACHType/FileSize">
+                <Annotation Term="SAP__common.Label" String="size"/>
+            </Annotations>
             <Annotations Target="SAP__self.Z4C_APPR_ATTACHType/CreatedAt">
-                <Annotation Term="SAP__common.Label" String="Created On"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Record Created On"/>
+                <Annotation Term="SAP__common.Label" String="Changed At"/>
             </Annotations>
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/PersonnelAreaText">
                 <Annotation Term="SAP__common.Label" String="Personnel Area Text"/>
@@ -995,6 +1189,11 @@
             <Annotations Target="SAP__self.ZC_MANAGE_REQType/PositionText">
                 <Annotation Term="SAP__common.Label" String="Object name"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Object Name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Z4C_APPR_LOGType/ActionDisplay">
+                <Annotation Term="SAP__common.Label" String="Perf. Action"/>
+                <Annotation Term="SAP__common.Heading" String="Person Performing Action"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Person Performing Action"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>

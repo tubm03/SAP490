@@ -1,7 +1,7 @@
 {
   "_version": "1.48.0",
   "sap.app": {
-    "id": "Recruiment_Req",
+    "id": "AP_Recruiment_Req",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.18.7",
-      "toolsId": "5a3da076-293c-4e79-8372-0224416ffc99"
+      "toolsId": "03ebac2c-c2b5-490d-a69a-3d65bf22186a"
     },
     "dataSources": {
       "annotation": {
@@ -37,10 +37,11 @@
     },
     "crossNavigation": {
       "inbounds": {
-        "APPR_REQ-Display": {
+        "APPR_REQ-Approval": {
           "semanticObject": "APPR_REQ",
-          "action": "Display",
-          "title": "{{APPR_REQ-Display.flpTitle}}",
+          "action": "Approval",
+          "title": "{{APPR_REQ-Approval.flpTitle}}",
+          "subTitle": "{{APPR_REQ-Approval.flpSubtitle}}",
           "signature": {
             "parameters": {},
             "additionalParameters": "allowed"
@@ -79,7 +80,7 @@
       "extensions": {
         "sap.ui.controllerExtensions": {
           "sap.fe.templates.ObjectPage.ObjectPageController": {
-            "controllerName": "project1.ext.controller.ObjectPageExt"
+            "controllerName": "project2.ext.controller.ObjectPageExt"
           }
         }
       }
@@ -92,7 +93,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "project1.i18n.i18n"
+          "bundleName": "project2.i18n.i18n"
         }
       },
       "": {
@@ -117,13 +118,13 @@
       "config": {},
       "routes": [
         {
-          "pattern": ":?query:",
           "name": "ZC_MANAGE_REQList",
+          "pattern": ":?query:",
           "target": "ZC_MANAGE_REQList"
         },
         {
-          "pattern": "ZC_MANAGE_REQ({key}):?query:",
           "name": "ZC_MANAGE_REQObjectPage",
+          "pattern": "ZC_MANAGE_REQ({ZC_MANAGE_REQKey}):?query:",
           "target": "ZC_MANAGE_REQObjectPage"
         }
       ],
@@ -134,9 +135,6 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "contextPath": "/ZC_MANAGE_REQ",
-              "variantManagement": "Page",
-              "initialLoad": "Enabled",
               "navigation": {
                 "ZC_MANAGE_REQ": {
                   "detail": {
@@ -144,21 +142,15 @@
                   }
                 }
               },
+              "contextPath": "/ZC_MANAGE_REQ",
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
-                  "tableSettings": {
-                    "type": "ResponsiveTable",
-                    "enableAutoColumnWidth": true
-                  },
                   "columns": {
-                    "DataField::CreatedAt": {
-                      "width": "12%"
+                    "DataField::ReqId": {
+                      "width": "8%"
                     },
-                    "DataField::CreatedBy": {
-                      "width": "10%"
-                    },
-                    "DataField::Status": {
-                      "width": "10%"
+                    "DataField::PersArea": {
+                      "width": "20%"
                     },
                     "DataField::OrgUnitId": {
                       "width": "20%"
@@ -166,11 +158,14 @@
                     "DataField::PositionId": {
                       "width": "20%"
                     },
-                    "DataField::PersArea": {
-                      "width": "20%"
+                    "DataField::StatusDisplay": {
+                      "width": "10%"
                     },
-                    "DataField::ReqId": {
-                      "width": "8%"
+                    "DataField::CreatedBy": {
+                      "width": "10%"
+                    },
+                    "DataField::CreatedAt": {
+                      "width": "12%"
                     }
                   }
                 }
@@ -184,7 +179,7 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
-              "editableHeaderContent": false,
+              "navigation": {},
               "contextPath": "/ZC_MANAGE_REQ",
               "controlConfiguration": {
                 "_HistoryLog/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -195,7 +190,7 @@
                     "DataField::ApprBy": {
                       "width": "25%"
                     },
-                    "DataField::Action": {
+                    "DataField::ActionDisplay": {
                       "width": "25%"
                     },
                     "DataField::LogComment": {

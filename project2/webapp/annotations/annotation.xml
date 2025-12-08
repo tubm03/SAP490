@@ -2,28 +2,17 @@
     <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
         <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
     </edmx:Reference>
-
     <edmx:Reference Uri="/sap/opu/odata4/sap/zui_manage_req_o4/srvd/sap/z_ui_manage_req/0001/$metadata">
         <edmx:Include Namespace="com.sap.gateway.srvd.z_ui_manage_req.v0001" Alias="SAP__self"/>
     </edmx:Reference>
-        <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
         <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
     </edmx:Reference>
+
     <edmx:DataServices>
         <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
             <Annotations Target="SAP__self.ZC_MANAGE_REQType">
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>ReqId</PropertyPath>
-                        <PropertyPath>PersArea</PropertyPath>
-                        <PropertyPath>OrgUnitId</PropertyPath>
-                        <PropertyPath>PositionId</PropertyPath>
-                        <PropertyPath>CreatedBy</PropertyPath>
-                        <PropertyPath>CreatedAt</PropertyPath>
-                        <PropertyPath>Status</PropertyPath>
-                    </Collection>
-                </Annotation>
-
                 <Annotation Term="UI.Identification">
                     <Collection>
                         <Record Type="UI.DataFieldForAction">
@@ -38,16 +27,11 @@
                             <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
                             <PropertyValue Property="Criticality" EnumMember="UI.CriticalityType/Negative"/>
                         </Record>
-                        <Record Type="UI.DataFieldForAction">
-                            <PropertyValue Property="Label" String="Print"/>
-                            <PropertyValue Property="Action" String="com.sap.gateway.srvd.z_ui_manage_req.v0001.Print(com.sap.gateway.srvd.z_ui_manage_req.v0001.ZC_MANAGE_REQType)"/>
-                            <PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
-                        </Record>
                     </Collection>
                 </Annotation>
             </Annotations>
 
-               <Annotations Target="com.sap.gateway.srvd.z_ui_manage_req.v0001.Accept">
+            <Annotations Target="com.sap.gateway.srvd.z_ui_manage_req.v0001.Accept">
                 <Annotation Term="Common.SideEffects">
                     <Record>
                         <PropertyValue Property="TargetEntities">
@@ -80,6 +64,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
+        
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>
